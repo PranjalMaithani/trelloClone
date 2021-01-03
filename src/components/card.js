@@ -1,17 +1,49 @@
-import { handleKeyDown } from "./handlers.js";
 import { deleteCard } from "../utils/updateData.js";
+import { useRef } from "react";
 
-export function Card({ card, listIndex, cards, setCards }) {
+export function Card({
+  card,
+  listIndex,
+  cards,
+  setCards,
+  getCurrentCardValues,
+}) {
+  const cardRef = useRef(null);
+
+  function EditButton() {
+    return (
+      <button
+        onClick={() => {
+          if (cardRef.current) {
+            const rect = cardRef.current.getBoundingClientRect();
+            const cardValues = {
+              x: rect.x,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height,
+              name: card.name,
+              id: card.id,
+              listIndex: listIndex,
+            };
+            getCurrentCardValues(cardValues);
+          }
+        }}
+      >
+        Edit
+      </button>
+    );
+  }
+
   return (
-    <div className="card">
-      <li>{card.name}</li>
+    <div className="card" ref={cardRef}>
+      <li className="cardText">{card.name}</li>
       <DeleteButton
         cardId={card.id}
         listIndex={listIndex}
         cards={cards}
         setCards={setCards}
       />
-      <EditButton cardId={card.id} listIndex={listIndex} />
+      <EditButton />
     </div>
   );
 }
@@ -26,37 +58,4 @@ function DeleteButton({ cardId, listIndex, cards, setCards }) {
     setCards(masterCardsArray);
   };
   return <button onClick={deleteFunction}>X</button>;
-}
-
-function EditButton({ cardId, listIndex, confirmAction, cancelAction }) {
-  return <button>E</button>;
-}
-
-function ModalCardEditor({
-  x,
-  y,
-  width,
-  height,
-  card,
-  cancelAction,
-  confirmAction,
-}) {
-  return (
-    <div className="modalOuter">
-      <div className="modalInner">
-        <form
-          onSubmit={confirmAction}
-          onKeyDown={(event) => {
-            handleKeyDown(event, confirmAction, cancelAction);
-          }}
-        >
-          <textarea name="input" value={card.name} autoFocus></textarea>
-          <button type="submit">Confirm</button>
-          <button type="button" onClick={cancelAction}>
-            Cancel
-          </button>
-        </form>
-      </div>
-    </div>
-  );
 }

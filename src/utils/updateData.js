@@ -5,10 +5,28 @@ function averagePosition(card1, cardDragging, card2) {
   else return (card1.pos + card2.pos) / 2;
 }
 
-export async function updateCard(listId, prevCard, currentCard, nextCard) {
+export async function updateCardPosition(
+  listId,
+  prevCard,
+  currentCard,
+  nextCard
+) {
   const newPos = averagePosition(prevCard, currentCard, nextCard);
   await fetch(
     `https://api.trello.com/1/cards/${currentCard.id}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&idList=${listId}&pos=${newPos}`,
+    {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+      },
+    }
+  );
+  return;
+}
+
+export async function updateCardValue(cardId, value) {
+  await fetch(
+    `https://api.trello.com/1/cards/${cardId}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${value}`,
     {
       method: "PUT",
       headers: {

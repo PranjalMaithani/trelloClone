@@ -16,11 +16,21 @@ import {
   DraggableDroppableList,
   DraggableCard,
 } from "./components/dragAndDropComponents.js";
+import { CardEditor } from "./utils/cardEditor";
 
 function App() {
   const [boards, setBoards] = React.useState([]);
   const [lists, setLists] = React.useState([]);
   const [cards, setCards] = React.useState([]); //will have sub arrays per list [["peel", "chop", "cook", "eat"], ["brainstorm", "sketch", "draw"]]
+  const [isEditingCard, setIsEditingCard] = React.useState(false);
+  let currentCard = React.useRef({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    name: "",
+    id: "",
+  });
 
   React.useEffect(() => {
     const assign = async () => {
@@ -41,6 +51,18 @@ function App() {
     <div className="App">
       <header className="App-header"></header>
       <div>
+        {isEditingCard && (
+          <CardEditor
+            currentCard={currentCard.current}
+            isEditing={isEditingCard}
+            disableEditing={() => {
+              setIsEditingCard(false);
+            }}
+            cards={cards}
+            setCards={setCards}
+          />
+        )}
+
         <DragMaster
           cards={cards}
           setCards={setCards}
@@ -74,6 +96,10 @@ function App() {
                             listIndex={listIndex}
                             cards={cards}
                             setCards={setCards}
+                            getCurrentCardValues={(values) => {
+                              currentCard.current = values;
+                              setIsEditingCard(true);
+                            }}
                           />
                         </DraggableCard>
                       ))}

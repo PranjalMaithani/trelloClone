@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { addCard } from "../utils/createData.js";
-import { handleKeyDown } from "./handlers.js";
+import { handleKeyDown, useClickOutside } from "../utils/lib.js";
 
 export function List(props) {
   const [editing, setEditing] = useState(false);
@@ -48,8 +48,11 @@ function AddCardButton({ enableEditing }) {
 }
 
 function NewCardInput({ confirmAction, cancelAction }) {
+  const formRef = useRef();
+  useClickOutside(formRef, cancelAction);
   return (
     <form
+      ref={formRef}
       onSubmit={confirmAction}
       onKeyDown={(event) => {
         handleKeyDown(event, confirmAction, cancelAction);

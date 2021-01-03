@@ -1,5 +1,5 @@
-import { asyncCatch } from "./handlers.js";
-import { updateCard, updateList } from "../utils/updateData.js";
+import { asyncCatch } from "../utils/lib.js";
+import { updateCardPosition, updateList } from "../utils/updateData.js";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export function handleDragEnd(result, cards, setCards, lists, setLists) {
@@ -42,7 +42,7 @@ export function handleDragEnd(result, cards, setCards, lists, setLists) {
         //replacing the original array with our modified one
         cardsArrMaster.splice(destinationListId, 1, cardsArrSource);
         asyncCatch(
-          updateCard,
+          updateCardPosition,
           lists[destinationListId].id,
           cardsArrSource[destination.index - 1],
           cardsArrSource[destination.index],
@@ -60,7 +60,7 @@ export function handleDragEnd(result, cards, setCards, lists, setLists) {
         cardsArrMaster.splice(sourceListId, 1, cardsArrSource);
         cardsArrMaster.splice(destinationListId, 1, cardsArrDestination);
         asyncCatch(
-          updateCard,
+          updateCardPosition,
           lists[destinationListId].id,
           cardsArrDestination[destination.index - 1],
           cardsArrDestination[destination.index],

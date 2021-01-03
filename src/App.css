@@ -34,3 +34,21 @@ ul {
 ul li {
   list-style: none;
 }
+
+.modalOuterCardEditor {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 10;
+}
+
+.modalInnerCardEditor {
+}
+
+.cardText {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
