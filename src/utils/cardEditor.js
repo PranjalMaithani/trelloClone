@@ -1,6 +1,7 @@
 import { handleKeyDown, useClickOutside, asyncCatch } from "./lib.js";
 import { useRef } from "react";
 import { updateCardValue } from "./updateData.js";
+import ReactDOM from "react-dom";
 
 export function CardEditor({ currentCard, disableEditing, cards, setCards }) {
   const cardEditorRef = useRef();
@@ -25,7 +26,7 @@ export function CardEditor({ currentCard, disableEditing, cards, setCards }) {
 
   useClickOutside(cardEditorRef, cancelAction);
 
-  return (
+  return ReactDOM.createPortal(
     <div
       className="modalOuterCardEditor"
       style={{
@@ -36,12 +37,11 @@ export function CardEditor({ currentCard, disableEditing, cards, setCards }) {
     >
       <div
         ref={cardEditorRef}
-        className="modalInnerCardEditor"
         style={{
           position: "absolute",
           top: currentCard.y,
           left: currentCard.x,
-          width: currentCard.width,
+          maxWidth: currentCard.width,
         }}
       >
         <form
@@ -58,15 +58,22 @@ export function CardEditor({ currentCard, disableEditing, cards, setCards }) {
               height: currentCard.height,
               minHeight: 60,
             }}
-            className="cardText"
+            className="cardText modalInnerCardEditor"
             defaultValue={currentCard.name}
           ></textarea>
-          <button type="submit">Confirm</button>
-          <button type="button" onClick={cancelAction}>
+          <button type="submit" className="cardText confirmButton">
+            Confirm
+          </button>
+          <button
+            type="button"
+            className="cardText cancelButton"
+            onClick={cancelAction}
+          >
             Cancel
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.getElementById("modal-root")
   );
 }

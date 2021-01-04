@@ -1,34 +1,199 @@
-.list {
-  display: flex;
-  flex-direction: column;
-  min-width: 250px;
-  max-width: 250px;
-  margin: 10px;
-  background-color: white;
+html,
+body {
+  background-color: rgb(52, 52, 77);
+}
+
+.App {
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: #172b4d;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.App-header {
+  height: 90px;
 }
 
 .card {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  border: 1px solid black;
   margin-top: 2px;
   overflow-x: hidden;
-  overflow-y: visible;
-  word-break: break-all;
+  overflow-y: hidden;
+  word-wrap: break-word;
+
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+  cursor: pointer;
+  margin-bottom: 8px;
+  max-width: 300px;
+  min-height: 20px;
+  text-decoration: none;
+  z-index: 3;
+
+  margin: 0 4px;
+  margin-bottom: 8px;
+}
+
+.cardWrapper {
+  position: relative;
+}
+
+.cardText {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 450;
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-decoration: none;
+  word-wrap: break-word;
+  color: #172b4d;
+  padding: 6px 12px 2px 4px;
+  position: relative;
+}
+
+.cardButton {
+  color: black;
+  background-color: #f4f5f7;
+  background-clip: padding-box;
+  background-origin: padding-box;
+  border-radius: 3px;
+  border-style: none;
+  opacity: 0.4;
+  padding: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.cardWrapper:hover .cardButton {
+  visibility: visible;
+}
+
+.editButton:hover {
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+
+.deleteButton:hover {
+  background-color: #ca3b3b;
+  color: #f4f5f7;
+  opacity: 1;
+}
+
+.cardButtonsWrapper {
+  position: absolute;
+  top: 5px;
+  right: 4px;
+  display: flex;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  width: 272px;
+  margin: 10px 4px;
+  max-height: 305px;
+  background-color: #ebecf0;
+  border-radius: 3px;
+  box-sizing: border-box;
+  flex-direction: column;
+  max-height: 100%;
+  white-space: normal;
+
+  flex: 1 1 auto;
+  margin-bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0 4px;
+  padding: 0 4px;
+  min-height: 0;
+  z-index: 5;
 }
 
 .listsContainer {
   display: flex;
   flex-direction: row;
-  overflow-x: auto;
-  overflow-y: hidden;
-  height: 600px;
-  background-color: lightgray;
-  min-width: 1000px;
+  position: absolute;
+  padding: 0 20px;
+  background-color: rgb(52, 52, 77);
+}
+
+.listHeader {
+  padding-right: 36px;
+  flex: 0 0 auto;
+  padding: 10px 8px;
+  padding-right: 8px;
+  position: relative;
+  min-height: 20px;
+}
+
+.listTitle {
+  height: 28px;
+  background: transparent;
+  border-radius: 3px;
+  box-shadow: none;
+  font-weight: 600;
+  margin: -4px 0;
+  height: 20px;
+  min-height: 20px;
+  padding: 4px 8px;
+  resize: none;
+  max-height: 256px;
+}
+
+.addButton {
+  display: flex;
+  justify-content: space-between;
+  background-color: transparent;
+  border-radius: 3px;
+  display: block;
+  flex: 1 0 auto;
+  margin: 2px 0 8px 8px;
+  padding: 4px 8px;
+  position: relative;
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.addCardButton {
+  color: #5e6c84;
+}
+
+.addCardButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #1c232e;
+}
+
+.addListButton {
+  max-height: 20px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  min-width: 240px;
+}
+
+.addListButton:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.newCardInput {
+  padding-bottom: 10px;
+  margin-left: 4px;
 }
 
 ul {
   padding-left: 0;
+  margin: 0;
 }
 
 ul li {
@@ -40,15 +205,81 @@ ul li {
   height: 100vh;
   position: absolute;
   z-index: 10;
+  animation: 0.1s ease-out 0s 1 fadeIn;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .modalInnerCardEditor {
+  max-width: 240px;
+  border-radius: 3px;
+  border-style: none;
+  outline: none;
+  resize: none;
+  min-height: 25px;
 }
 
-.cardText {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
-    Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+.addCardModal {
+  overflow-y: scroll;
+  max-height: 100px;
+  overflow-x: hidden;
+  min-width: 240px;
+  max-width: 240px;
+  word-wrap: break-word;
+
+  resize: vertical;
+}
+
+.confirmButton {
+  padding: 6px 24px;
+  margin-top: 8px;
+  margin-right: 4px;
+  background-color: #5aac44;
+  box-shadow: none;
+  border: none;
+  color: #fff;
+  border-radius: 3px;
+  font-weight: 700;
+
   font-size: 14px;
   line-height: 20px;
-  font-weight: 400;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.confirmButton:hover {
+  background-color: #52be34;
+}
+
+.cancelButton {
+  padding: 6px 24px;
+  margin-top: 8px;
+  background-color: #b3b3b3;
+  box-shadow: none;
+  border: none;
+  color: #3d4657;
+  border-radius: 3px;
+
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #aaaaaa;
 }

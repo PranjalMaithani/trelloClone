@@ -28,7 +28,9 @@ export function List(props) {
 
   return (
     <div className="list">
-      <p>{props.name}</p>
+      <div className="listHeader">
+        <span className="listTitle">{props.name}</span>
+      </div>
       {props.children}
       <div>
         {!editing && <AddCardButton enableEditing={enableEditing} />}
@@ -44,7 +46,12 @@ export function List(props) {
 }
 
 function AddCardButton({ enableEditing }) {
-  return <span onClick={enableEditing}> + Add another card</span>;
+  return (
+    <span className="addButton addCardButton" onClick={enableEditing}>
+      {" "}
+      + Add another card
+    </span>
+  );
 }
 
 function NewCardInput({ confirmAction, cancelAction }) {
@@ -52,6 +59,7 @@ function NewCardInput({ confirmAction, cancelAction }) {
   useClickOutside(formRef, cancelAction);
   return (
     <form
+      className="newCardInput"
       ref={formRef}
       onSubmit={confirmAction}
       onKeyDown={(event) => {
@@ -62,11 +70,63 @@ function NewCardInput({ confirmAction, cancelAction }) {
         name="input"
         placeholder="Enter a title for this card..."
         autoFocus
+        className="cardText modalInnerCardEditor addCardModal"
       ></textarea>
-      <button type="submit">Add Card</button>
-      <button type="button" onClick={cancelAction}>
+      <button type="submit" className="confirmButton">
+        Add Card
+      </button>
+      <button type="button" className="cancelButton" onClick={cancelAction}>
         Cancel
       </button>
     </form>
+  );
+}
+
+export function AddListButton() {
+  const [enabled, setEnabled] = useState(false);
+
+  const confirmAction = () => {};
+
+  const cancelAction = () => {
+    setEnabled(false);
+  };
+
+  const addListButtonRef = useRef();
+  useClickOutside(addListButtonRef, cancelAction);
+
+  return enabled ? (
+    <div>
+      <form
+        className="newCardInput"
+        ref={addListButtonRef}
+        onSubmit={confirmAction}
+        onKeyDown={(event) => {
+          handleKeyDown(event, confirmAction, cancelAction);
+        }}
+      >
+        <textarea
+          name="input"
+          placeholder="Enter list title..."
+          autoFocus
+          className="cardText modalInnerCardEditor addCardModal"
+        ></textarea>
+        <button type="submit" className="confirmButton">
+          Add List
+        </button>
+        <button type="button" className="cancelButton" onClick={cancelAction}>
+          X
+        </button>
+      </form>
+    </div>
+  ) : (
+    <span
+      className="addButton addListButton"
+      onClick={() => {
+        setEnabled((prevState) => !prevState);
+      }}
+    >
+      {" "}
+      + Add another list
+    </span>
   );
 }

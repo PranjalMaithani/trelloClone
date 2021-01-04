@@ -7,7 +7,7 @@ import {
   fetchBoardCards,
 } from "./utils/fetchData.js";
 
-import { List } from "./components/list.js";
+import { List, AddListButton } from "./components/list.js";
 import { Card } from "./components/card.js";
 import { filterCardsArray } from "./utils/cardsSort.js";
 import {
@@ -50,19 +50,18 @@ function App() {
   return (
     <div className="App">
       <header className="App-header"></header>
+      {isEditingCard && (
+        <CardEditor
+          currentCard={currentCard.current}
+          isEditing={isEditingCard}
+          disableEditing={() => {
+            setIsEditingCard(false);
+          }}
+          cards={cards}
+          setCards={setCards}
+        />
+      )}
       <div>
-        {isEditingCard && (
-          <CardEditor
-            currentCard={currentCard.current}
-            isEditing={isEditingCard}
-            disableEditing={() => {
-              setIsEditingCard(false);
-            }}
-            cards={cards}
-            setCards={setCards}
-          />
-        )}
-
         <DragMaster
           cards={cards}
           setCards={setCards}
@@ -107,6 +106,7 @@ function App() {
                 </List>
               </DraggableDroppableList>
             ))}
+            <AddListButton />
           </DroppableBoard>
         </DragMaster>
       </div>

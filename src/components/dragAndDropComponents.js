@@ -101,17 +101,24 @@ export function DraggableDroppableList(props) {
           {...providedList.draggableProps}
           {...providedList.dragHandleProps}
         >
-          <Droppable droppableId={`list${props.listIndex}`} type="CARDS">
-            {(providedListDroppable, snapshotListDroppable) => (
-              <div
-                ref={providedListDroppable.innerRef}
-                {...providedListDroppable.droppableProps}
-              >
-                {props.children}
-                {providedListDroppable.placeholder}
-              </div>
-            )}
-          </Droppable>
+          <div
+            style={{
+              transform: snapshotList.isDragging ? "rotate(9deg)" : "",
+              transition: "none",
+            }}
+          >
+            <Droppable droppableId={`list${props.listIndex}`} type="CARDS">
+              {(providedListDroppable, snapshotListDroppable) => (
+                <div
+                  ref={providedListDroppable.innerRef}
+                  {...providedListDroppable.droppableProps}
+                >
+                  {props.children}
+                  {providedListDroppable.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </div>
         </div>
       )}
     </Draggable>
@@ -127,7 +134,14 @@ export function DraggableCard(props) {
           {...providedCard.draggableProps}
           {...providedCard.dragHandleProps}
         >
-          {props.children}
+          <div
+            style={{
+              transform: snapshotCard.isDragging ? "rotate(4deg)" : "",
+              transition: "none",
+            }}
+          >
+            {props.children}
+          </div>
         </div>
       )}
     </Draggable>

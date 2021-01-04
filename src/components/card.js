@@ -13,6 +13,7 @@ export function Card({
   function EditButton() {
     return (
       <button
+        className="cardButton editButton"
         onClick={() => {
           if (cardRef.current) {
             const rect = cardRef.current.getBoundingClientRect();
@@ -36,14 +37,18 @@ export function Card({
 
   return (
     <div className="card" ref={cardRef}>
-      <li className="cardText">{card.name}</li>
-      <DeleteButton
-        cardId={card.id}
-        listIndex={listIndex}
-        cards={cards}
-        setCards={setCards}
-      />
-      <EditButton />
+      <div className="cardWrapper">
+        <li className="cardText">{card.name}</li>
+        <div className="cardButtonsWrapper">
+          <DeleteButton
+            cardId={card.id}
+            listIndex={listIndex}
+            cards={cards}
+            setCards={setCards}
+          />
+          <EditButton />
+        </div>
+      </div>
     </div>
   );
 }
@@ -57,5 +62,9 @@ function DeleteButton({ cardId, listIndex, cards, setCards }) {
     masterCardsArray.splice(listIndex, 0, newCardsInList);
     setCards(masterCardsArray);
   };
-  return <button onClick={deleteFunction}>X</button>;
+  return (
+    <button className="cardButton deleteButton" onClick={deleteFunction}>
+      X
+    </button>
+  );
 }
