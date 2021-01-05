@@ -27,3 +27,16 @@ export function useClickOutside(innerRef, callback) {
     };
   }, [callback, innerRef]);
 }
+
+export function randomVividColor(minSat, maxSat, minLightness, maxLightness) {
+  const randomHue = Math.floor(360 * Math.random());
+  const randomSaturation =
+    Math.floor(Math.random() * (maxSat - minSat)) + minSat;
+  const randomLightness =
+    Math.floor(Math.random() * (maxLightness - minLightness)) + minLightness;
+  return {
+    h: randomHue,
+    s: randomSaturation,
+    l: randomLightness,
+  };
+}

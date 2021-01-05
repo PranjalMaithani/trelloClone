@@ -7,6 +7,7 @@ import {
   fetchBoardCards,
 } from "./utils/fetchData.js";
 
+import { BoardSelection } from "./components/boardSelection.js";
 import { List, AddListField } from "./components/list.js";
 import { Card } from "./components/card.js";
 import { filterCardsArray } from "./utils/cardsSort.js";
@@ -38,21 +39,29 @@ function App() {
   React.useEffect(() => {
     const assign = async () => {
       const boardsArr = await fetchBoards();
-      const listsArr = await fetchBoardLists(boardsArr[1].id);
-      const cardsArr = await fetchBoardCards(boardsArr[1].id);
-      const filteredCardsArr = filterCardsArray(listsArr, cardsArr);
 
       setBoards(boardsArr);
-      setLists(listsArr);
-      setCards(filteredCardsArr);
     };
 
     assign();
   }, []);
 
+  React.useEffect(() => {
+    const assign = async () => {
+      const listsArr = await fetchBoardLists(currentBoard.id);
+      const cardsArr = await fetchBoardCards(currentBoard.id);
+      const filteredCardsArr = filterCardsArray(listsArr, cardsArr);
+
+      setLists(listsArr);
+      setCards(filteredCardsArr);
+    };
+
+    if (currentBoard !== null) assign();
+  }, [currentBoard]);
+
   function Board() {
     return (
-      <div>
+      <div className="board">
         {isEditingCard && (
           <CardEditor
             currentCard={currentCard.current}
@@ -111,7 +120,7 @@ function App() {
             ))}
             {boards[0] && (
               <AddListField
-                boardId={boards[1].id}
+                boardId={currentBoard.id}
                 setLists={setLists}
                 setCards={setCards}
               />
@@ -124,8 +133,23 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header"></header>
-      <Board />
+      <header className="App-header">
+        {currentBoard !== null ? (
+          <h2 className="boardTitle">{currentBoard.name}</h2>
+        ) : null}
+        <h1>TRULLO</h1>
+      </header>
+      {currentBoard === null ? (
+        <BoardSelection
+          boards={boards}
+          setBoards={setBoards}
+          setCurrentBoard={(board) => {
+            setCurrentBoard(board);
+          }}
+        />
+      ) : (
+        <Board />
+      )}
     </div>
   );
 }

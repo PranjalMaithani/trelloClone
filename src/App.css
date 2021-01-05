@@ -17,6 +17,21 @@ body {
 
 .App-header {
   height: 90px;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.App-header h1 {
+  margin: auto;
+  font-style: italic;
+  font-weight: 100;
+  letter-spacing: 20px;
+  color: #9350d3;
 }
 
 .card {
@@ -309,4 +324,55 @@ ul li {
 
 .cancelButton:hover {
   background-color: #aaaaaa;
+}
+
+.boardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 550px;
+  height: 480px;
+  overflow-y: auto;
+}
+
+.boardTile {
+  height: 120px;
+  width: 160px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  font-size: 1.4em;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.boardsSelectionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.board {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.boardsSelectionWrapper h1 {
+  color: #ebecf0;
+  font-weight: 200;
+  font-size: 2.5em;
+}
+
+.boardTitle {
+  margin-left: 40px;
+  color: #bfc9da;
 }
