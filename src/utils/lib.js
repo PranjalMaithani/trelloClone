@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export const handleKeyDown = (event, confirmAction, cancelAction) => {
-  if (event.key === "Escape") cancelAction();
+  if (event.key === "Escape") cancelAction(event);
   else if (event.key === "Enter") confirmAction(event);
 };
 
@@ -17,7 +17,6 @@ export async function asyncCatch(callback, ...args) {
 export function useClickOutside(innerRef, callback) {
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // if (!event.target.closest(className)) {
       if (innerRef.current && !innerRef.current.contains(event.target)) {
         callback();
       }

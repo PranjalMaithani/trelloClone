@@ -3,8 +3,20 @@ import { useRef } from "react";
 import { updateCardValue } from "./updateData.js";
 import ReactDOM from "react-dom";
 
+function createModal(modalRef) {
+  modalRef.current = document.getElementById("modal-root");
+  if (!modalRef.current) {
+    let element = document.createElement("div");
+    element.setAttribute("id", "modal-root");
+    document.body.appendChild(element);
+  }
+}
+
 export function CardEditor({ currentCard, disableEditing, cards, setCards }) {
   const cardEditorRef = useRef();
+  const modalRef = useRef(null);
+
+  createModal(modalRef);
 
   const confirmAction = (event) => {
     event.preventDefault();

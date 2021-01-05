@@ -1,0 +1,17 @@
+export async function BoardSelection(boards, setBoards, setCurrentBoard) {
+  const Board = (board) => {
+    return (
+      <div>
+        <span>{board.name}</span>
+      </div>
+    );
+  };
+
+  return (
+    <div className="boardsGrid">
+      {boards.map((board) => {
+        return <Board board={board} />;
+      })}
+    </div>
+  );
+}

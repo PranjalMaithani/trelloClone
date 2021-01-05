@@ -77,6 +77,10 @@ body {
   visibility: visible;
 }
 
+.listHeader:hover .listButton {
+  visibility: visible;
+}
+
 .editButton:hover {
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   opacity: 1;
@@ -86,6 +90,7 @@ body {
   background-color: #ca3b3b;
   color: #f4f5f7;
   opacity: 1;
+  border-style: none;
 }
 
 .cardButtonsWrapper {
@@ -99,18 +104,14 @@ body {
   display: flex;
   flex-direction: column;
   width: 272px;
-  margin: 10px 4px;
-  max-height: 305px;
   background-color: #ebecf0;
   border-radius: 3px;
   box-sizing: border-box;
-  flex-direction: column;
-  max-height: 100%;
+  max-height: 80vh;
   white-space: normal;
 
-  flex: 1 1 auto;
   margin-bottom: 0;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   margin: 0 4px;
   padding: 0 4px;
@@ -124,29 +125,46 @@ body {
   position: absolute;
   padding: 0 20px;
   background-color: rgb(52, 52, 77);
+  margin-bottom: 8px;
+}
+
+.listCards {
+  overflow-y: auto;
 }
 
 .listHeader {
-  padding-right: 36px;
-  flex: 0 0 auto;
-  padding: 10px 8px;
-  padding-right: 8px;
   position: relative;
-  min-height: 20px;
+  padding: 10px 6px;
+  position: relative;
+  height: 100%;
 }
 
 .listTitle {
-  height: 28px;
+  display: block;
+  overflow-y: scroll;
+  min-height: 28px;
   background: transparent;
-  border-radius: 3px;
+  border-style: none;
   box-shadow: none;
   font-weight: 600;
   margin: -4px 0;
-  height: 20px;
-  min-height: 20px;
-  padding: 4px 8px;
   resize: none;
-  max-height: 256px;
+  max-height: 250px;
+  overflow-wrap: break-word;
+  cursor: pointer;
+  padding-right: 40px;
+}
+
+.listEditor {
+  overflow-y: auto;
+  resize: none;
+  background-color: white;
+  box-shadow: inset 0 0 0 2px #0079bf;
+  border-radius: 3px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: auto;
 }
 
 .addButton {
@@ -189,6 +207,15 @@ body {
 .newCardInput {
   padding-bottom: 10px;
   margin-left: 4px;
+}
+
+.newListInput {
+  padding: 10px;
+  margin: 0 4px;
+  max-width: 260px;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.2);
+  max-height: 100%;
 }
 
 ul {

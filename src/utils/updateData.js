@@ -37,6 +37,16 @@ export async function updateCardValue(cardId, value) {
   return;
 }
 
+export async function updateListValue(listId, value) {
+  await fetch(
+    `https://api.trello.com/1/lists/${listId}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${value}`,
+    {
+      method: "PUT",
+    }
+  );
+  return;
+}
+
 export async function updateList(prevList, currentList, nextList) {
   const newPos = averagePosition(prevList, currentList, nextList);
   await fetch(
@@ -55,4 +65,14 @@ export async function deleteCard(cardId) {
       method: "DELETE",
     }
   );
+}
+
+export async function archiveList(listId) {
+  await fetch(
+    `https://api.trello.com/1/lists/${listId}/closed?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&value=true`,
+    {
+      method: "PUT",
+    }
+  );
+  return;
 }
