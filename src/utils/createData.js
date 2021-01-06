@@ -19,3 +19,14 @@ export async function addList(boardId, name) {
   const parsedList = await newList.json();
   return parsedList;
 }
+
+export async function addBoard(name) {
+  const newBoard = await fetch(
+    `https://api.trello.com/1/boards/?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${name}`,
+    {
+      method: "POST",
+    }
+  );
+  const parsedBoard = await newBoard.json();
+  return parsedBoard;
+}

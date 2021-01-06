@@ -86,3 +86,13 @@ export async function archiveList(listId) {
   );
   return;
 }
+
+export async function deleteBoard(boardId) {
+  await fetch(
+    `https://api.trello.com/1/boards/${boardId}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}`,
+    {
+      method: "DELETE",
+    }
+  );
+  return;
+}

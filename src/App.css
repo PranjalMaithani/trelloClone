@@ -1,13 +1,14 @@
 :root {
   --backgroundColor: rgb(52, 52, 77);
   --backgroundColor-darker: rgb(30, 30, 43);
+  --font-dark: #172b4d;
 }
 
 .App {
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
-  color: #172b4d;
+  color: var(--font-dark, #172b4d);
   position: absolute;
   top: 0;
   left: 0;
@@ -90,7 +91,7 @@
   overflow: hidden;
   text-decoration: none;
   word-wrap: break-word;
-  color: #172b4d;
+  color: var(--font-dark, #172b4d);
   padding: 6px 12px 2px 4px;
   position: relative;
 }
@@ -117,6 +118,10 @@
   visibility: visible;
 }
 
+.boardTile:hover .deleteButton {
+  visibility: visible;
+}
+
 .editButton:hover {
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   opacity: 1;
@@ -127,6 +132,7 @@
   color: #f4f5f7;
   opacity: 1;
   border-style: none;
+  z-index: 100;
 }
 
 .cardButtonsWrapper {
@@ -350,8 +356,10 @@ ul li {
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   max-width: 550px;
-  height: 480px;
+  max-height: 480px;
   overflow-y: auto;
+
+  animation: 0.4s ease-out 0s 1 popUpMenu;
 }
 
 .boardTile {
@@ -364,6 +372,7 @@ ul li {
   font-weight: 700;
   border-radius: 8px;
   box-shadow: 2px 5px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .boardsSelectionWrapper {
@@ -406,28 +415,37 @@ ul li {
   margin-left: 10px;
   color: #bfc9da;
   max-width: 400px;
+  filter: none;
+
+  transition: 0.2s;
 }
 
 .boardTitleStatic {
   padding-left: 4px;
 }
 
-.boardTitleEditing {
-  color: #1c232e;
-  resize: none;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0;
-  border: none;
-  border-style: none;
+.boardTitleEditor {
+  color: var(--font-dark, #172b4d);
   box-shadow: inset 0 0 0 2px #0079bf;
-  border-radius: 3px;
 }
 
 .boardTile:hover {
   filter: brightness(180%);
   filter: saturate(140%);
   cursor: pointer;
+}
+
+.addBoardButton {
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid white;
+  color: #fff;
+  font-weight: 300;
+  transition: 0.2s;
+}
+
+.addBoardButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .boardUIbuttons {
@@ -448,4 +466,35 @@ ul li {
   background-color: rgba(0, 0, 0, 0.1);
   color: white;
   cursor: pointer;
+}
+
+.messageWindow {
+  color: white;
+  font-size: 1.3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30vw;
+  min-height: 25vh;
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
+  animation: 0.4s ease-out 0s 1 popUpMenu;
+}
+
+@keyframes popUpMenu {
+  0% {
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.messageWindowButtonsWrapper {
+  display: flex;
+  justify-content: flex-end;
 }

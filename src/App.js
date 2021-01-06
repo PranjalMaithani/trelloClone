@@ -25,6 +25,7 @@ function App() {
   const [lists, setLists] = React.useState([]);
   const [cards, setCards] = React.useState([]); //will have sub arrays per list [["peel", "chop", "cook", "eat"], ["brainstorm", "sketch", "draw"]]
   const [hasDataFetched, setHasDataFetched] = React.useState(false);
+  const [hasFetchedBoards, setHasFetchedBoards] = React.useState(false);
 
   const [currentBoard, setCurrentBoard] = React.useState(null);
   const lastActiveBoard = React.useRef(null);
@@ -33,6 +34,7 @@ function App() {
     const assign = async () => {
       const boardsArr = await fetchBoards();
       setBoards(boardsArr);
+      setHasFetchedBoards(true);
     };
 
     assign();
@@ -147,6 +149,7 @@ function App() {
         <BoardSelection
           boards={boards}
           setBoards={setBoards}
+          hasFetchedBoards={hasFetchedBoards}
           setCurrentBoard={(board) => {
             if (board !== lastActiveBoard.current) {
               setLists([]);
