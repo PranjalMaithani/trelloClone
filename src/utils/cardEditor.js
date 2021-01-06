@@ -1,5 +1,5 @@
 import { handleKeyDown, useClickOutside, asyncCatch } from "./lib.js";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { updateCardValue } from "./updateData.js";
 import ReactDOM from "react-dom";
 

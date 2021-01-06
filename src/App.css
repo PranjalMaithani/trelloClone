@@ -1,6 +1,6 @@
-html,
-body {
-  background-color: rgb(52, 52, 77);
+:root {
+  --backgroundColor: rgb(52, 52, 77);
+  --backgroundColor-darker: rgb(30, 30, 43);
 }
 
 .App {
@@ -13,12 +13,18 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
+
+  background: linear-gradient(
+    var(--backgroundColor-darker),
+    var(--backgroundColor)
+  );
 }
 
 .App-header {
   height: 90px;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -26,9 +32,22 @@ body {
   bottom: 0;
 }
 
+.headerTab {
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 100%;
+  padding: 20px;
+}
+
+.headerAuthorName {
+  font-weight: 200;
+  letter-spacing: 3px;
+  font-size: 1.2em;
+  color: #aaaaaa;
+}
+
 .App-header h1 {
   margin: auto;
-  font-style: italic;
   font-weight: 100;
   letter-spacing: 20px;
   color: #9350d3;
@@ -139,7 +158,6 @@ body {
   flex-direction: row;
   position: absolute;
   padding: 0 20px;
-  background-color: rgb(52, 52, 77);
   margin-bottom: 8px;
 }
 
@@ -157,12 +175,10 @@ body {
 .listTitle {
   display: block;
   overflow-y: scroll;
-  min-height: 28px;
   background: transparent;
   border-style: none;
   box-shadow: none;
   font-weight: 600;
-  margin: -4px 0;
   resize: none;
   max-height: 250px;
   overflow-wrap: break-word;
@@ -179,7 +195,8 @@ body {
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  height: auto;
+  height: 28px;
+  /* margin-bottom: 4px; */
 }
 
 .addButton {
@@ -266,10 +283,11 @@ ul li {
   outline: none;
   resize: none;
   min-height: 25px;
+  overflow-y: scroll;
 }
 
 .addCardModal {
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 100px;
   overflow-x: hidden;
   min-width: 240px;
@@ -373,6 +391,32 @@ ul li {
 }
 
 .boardTitle {
-  margin-left: 40px;
+  margin-left: 10px;
   color: #bfc9da;
+}
+
+.boardTile:hover {
+  filter: brightness(180%);
+  filter: saturate(140%);
+  cursor: pointer;
+}
+
+.boardUIbuttons {
+  display: flex;
+  margin-left: 25px;
+}
+
+.backButton {
+  border: none;
+  outline: none;
+  font-size: 1.5em;
+  color: #bfc9da;
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+.backButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: white;
+  cursor: pointer;
 }

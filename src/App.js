@@ -7,6 +7,7 @@ import {
   fetchBoardCards,
 } from "./utils/fetchData.js";
 
+import { Loader } from "./components/loader/loader.js";
 import { BoardSelection } from "./components/boardSelection.js";
 import { List, AddListField } from "./components/list.js";
 import { Card } from "./components/card.js";
@@ -17,29 +18,19 @@ import {
   DraggableDroppableList,
   DraggableCard,
 } from "./components/dragAndDropComponents.js";
-import { CardEditor } from "./utils/cardEditor";
 
 function App() {
   const [boards, setBoards] = React.useState([]);
   const [lists, setLists] = React.useState([]);
   const [cards, setCards] = React.useState([]); //will have sub arrays per list [["peel", "chop", "cook", "eat"], ["brainstorm", "sketch", "draw"]]
-  const [isEditingCard, setIsEditingCard] = React.useState(false);
+  const [hasDataFetched, setHasDataFetched] = React.useState(false);
 
   const [currentBoard, setCurrentBoard] = React.useState(null);
-
-  let currentCard = React.useRef({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-    name: "",
-    id: "",
-  });
+  const lastActiveBoard = React.useRef(null);
 
   React.useEffect(() => {
     const assign = async () => {
       const boardsArr = await fetchBoards();
-
       setBoards(boardsArr);
     };
 
@@ -54,101 +45,116 @@ function App() {
 
       setLists(listsArr);
       setCards(filteredCardsArr);
+      setHasDataFetched(true);
     };
 
     if (currentBoard !== null) assign();
   }, [currentBoard]);
 
-  function Board() {
-    return (
-      <div className="board">
-        {isEditingCard && (
-          <CardEditor
-            currentCard={currentCard.current}
-            disableEditing={() => {
-              setIsEditingCard(false);
-            }}
+  const Board = React.useCallback(
+    ({ lists, cards, hasDataFetched }) => {
+      return (
+        <div className="board">
+          {!hasDataFetched && <Loader />}
+          <DragMaster
             cards={cards}
             setCards={setCards}
-          />
-        )}
-        <DragMaster
-          cards={cards}
-          setCards={setCards}
-          lists={lists}
-          setLists={setLists}
-        >
-          <DroppableBoard>
-            {lists.map((list, listIndex) => (
-              <DraggableDroppableList
-                key={list.id}
-                list={list}
-                listIndex={listIndex}
-              >
-                <List
-                  name={list.name}
-                  id={list.id}
-                  index={listIndex}
-                  lists={lists}
-                  setLists={setLists}
-                  cards={cards}
-                  setCards={setCards}
+            lists={lists}
+            setLists={setLists}
+          >
+            <DroppableBoard>
+              {lists.map((list, listIndex) => (
+                <DraggableDroppableList
+                  key={list.id}
+                  list={list}
+                  listIndex={listIndex}
                 >
-                  <ul>
-                    {cards[listIndex] &&
-                      cards[listIndex].map((card, cardIndex) => (
-                        <DraggableCard
-                          key={card.id}
-                          card={card}
-                          cardIndex={cardIndex}
-                        >
-                          <Card
+                  <List
+                    name={list.name}
+                    id={list.id}
+                    index={listIndex}
+                    lists={lists}
+                    setLists={setLists}
+                    cards={cards}
+                    setCards={setCards}
+                  >
+                    <ul>
+                      {cards[listIndex] &&
+                        cards[listIndex].map((card, cardIndex) => (
+                          <DraggableCard
+                            key={card.id}
                             card={card}
-                            listIndex={listIndex}
-                            cards={cards}
-                            setCards={setCards}
-                            getCurrentCardValues={(values) => {
-                              currentCard.current = values;
-                              setIsEditingCard(true);
-                            }}
-                          />
-                        </DraggableCard>
-                      ))}
-                  </ul>
-                </List>
-              </DraggableDroppableList>
-            ))}
-            {boards[0] && (
-              <AddListField
-                boardId={currentBoard.id}
-                setLists={setLists}
-                setCards={setCards}
-              />
-            )}
-          </DroppableBoard>
-        </DragMaster>
-      </div>
-    );
-  }
+                            cardIndex={cardIndex}
+                          >
+                            <Card
+                              card={card}
+                              listIndex={listIndex}
+                              cards={cards}
+                              setCards={setCards}
+                            />
+                          </DraggableCard>
+                        ))}
+                    </ul>
+                  </List>
+                </DraggableDroppableList>
+              ))}
+              {hasDataFetched && (
+                <AddListField
+                  boardId={currentBoard.id}
+                  setLists={setLists}
+                  setCards={setCards}
+                />
+              )}
+            </DroppableBoard>
+          </DragMaster>
+        </div>
+      );
+    },
+    [currentBoard]
+  );
 
   return (
     <div className="App">
       <header className="App-header">
-        {currentBoard !== null ? (
-          <h2 className="boardTitle">{currentBoard.name}</h2>
-        ) : null}
+        <div className="headerTab">
+          {currentBoard !== null ? (
+            <div className="boardUIbuttons">
+              <button
+                onClick={() => {
+                  setCurrentBoard(null);
+                  setHasDataFetched(false);
+                }}
+                className="backButton"
+              >
+                ⬅
+              </button>
+              <h2 className="boardTitle">{currentBoard.name}</h2>
+            </div>
+          ) : null}
+        </div>
         <h1>TRULLO</h1>
+        <div className="headerTab" style={{ justifyContent: "flex-end" }}>
+          <span className="headerAuthorName">Pranjal Maithani</span>
+        </div>
       </header>
       {currentBoard === null ? (
         <BoardSelection
           boards={boards}
           setBoards={setBoards}
           setCurrentBoard={(board) => {
+            if (board !== lastActiveBoard.current) {
+              setLists([]);
+              setCards([]);
+              setHasDataFetched(false);
+            } else {
+              setHasDataFetched(true);
+            }
             setCurrentBoard(board);
+            lastActiveBoard.current = board;
           }}
         />
       ) : (
-        <Board />
+        <Board cards={cards} lists={lists} hasDataFetched={hasDataFetched} />
       )}
     </div>
   );

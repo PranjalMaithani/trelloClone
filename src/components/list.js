@@ -1,24 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { addCard, addList } from "../utils/createData.js";
 import { updateListValue } from "../utils/updateData.js";
 import { archiveList } from "../utils/updateData.js";
 import { handleKeyDown, useClickOutside, asyncCatch } from "../utils/lib.js";
+import { RenameTextArea } from "./renameTextArea.js";
 
 export function List(props) {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const listRenameRef = useRef(null);
-  const [listNameHeight, setListNameHeight] = useState(0);
-
-  useEffect(() => {
-    if (listRenameRef.current) {
-      setListNameHeight(
-        window
-          .getComputedStyle(listRenameRef.current)
-          .getPropertyValue("height")
-      );
-    }
-  }, [listRenameRef]);
 
   const cancelAction = () => {
     setIsAddingCard(false);
@@ -78,8 +68,10 @@ export function List(props) {
     );
   };
 
-  const confirmListRename = (event) => {
-    const newValue = event.currentTarget.value;
+  const confirmListRename = () => {
+    if (!listRenameRef.current) return;
+
+    const newValue = listRenameRef.current.value;
     if (newValue === "") {
       setRenaming(false);
       return;
@@ -93,12 +85,10 @@ export function List(props) {
     setRenaming(false);
   };
 
-  // useClickOutside(listRenameRef, confirmListRename);
-
   return (
     <div className="list">
       {!renaming ? (
-        <div className="listHeader" ref={listRenameRef}>
+        <div className="listHeader">
           <span className="cardText listTitle">{props.name}</span>
           <div className="cardButtonsWrapper">
             <DeleteButton />
@@ -107,19 +97,11 @@ export function List(props) {
         </div>
       ) : (
         <div className="listHeader">
-          <textarea
-            name="input"
+          <RenameTextArea
             defaultValue={props.name}
-            autoFocus
-            className="cardText listTitle listEditor"
-            style={{ height: listNameHeight }}
-            onKeyDown={(event) => {
-              handleKeyDown(event, confirmListRename, confirmListRename);
-            }}
-            onChange={(event) => {
-              setListNameHeight(event.currentTarget.scrollHeight);
-            }}
-          ></textarea>
+            confirmAction={confirmListRename}
+            ref={listRenameRef}
+          />
         </div>
       )}
       <div className="listCards">{props.children}</div>

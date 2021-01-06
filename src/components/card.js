@@ -1,14 +1,11 @@
 import { deleteCard } from "../utils/updateData.js";
-import { useRef } from "react";
+import { CardEditor } from "../utils/cardEditor.js";
+import { useRef, useState } from "react";
 
-export function Card({
-  card,
-  listIndex,
-  cards,
-  setCards,
-  getCurrentCardValues,
-}) {
+export function Card({ card, listIndex, cards, setCards }) {
   const cardRef = useRef(null);
+  const currentCard = useRef(null); //current card values for editing
+  const [isEditing, setIsEditing] = useState(false);
 
   function EditButton() {
     return (
@@ -26,7 +23,9 @@ export function Card({
               id: card.id,
               listIndex: listIndex,
             };
-            getCurrentCardValues(cardValues);
+
+            currentCard.current = cardValues;
+            setIsEditing(true);
           }
         }}
       >
@@ -37,6 +36,16 @@ export function Card({
 
   return (
     <div className="card" ref={cardRef}>
+      {isEditing && (
+        <CardEditor
+          currentCard={currentCard.current}
+          disableEditing={() => {
+            setIsEditing(false);
+          }}
+          cards={cards}
+          setCards={setCards}
+        />
+      )}
       <div className="cardWrapper">
         <li className="cardText">{card.name}</li>
         <div className="cardButtonsWrapper">
