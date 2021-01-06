@@ -100,6 +100,7 @@ export function List(props) {
           <RenameTextArea
             defaultValue={props.name}
             confirmAction={confirmListRename}
+            classes="listEditor cardText listTitle"
             ref={listRenameRef}
           />
         </div>

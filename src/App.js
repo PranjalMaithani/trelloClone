@@ -9,6 +9,7 @@ import {
 
 import { Loader } from "./components/loader/loader.js";
 import { BoardSelection } from "./components/boardSelection.js";
+import { BoardTitle } from "./components/boardTitle.js";
 import { List, AddListField } from "./components/list.js";
 import { Card } from "./components/card.js";
 import { filterCardsArray } from "./utils/cardsSort.js";
@@ -52,7 +53,7 @@ function App() {
   }, [currentBoard]);
 
   const Board = React.useCallback(
-    ({ lists, cards, hasDataFetched }) => {
+    ({ lists, cards, hasDataFetched, currentBoard }) => {
       return (
         <div className="board">
           {!hasDataFetched && <Loader />}
@@ -110,7 +111,7 @@ function App() {
         </div>
       );
     },
-    [currentBoard]
+    []
   );
 
   return (
@@ -128,7 +129,12 @@ function App() {
               >
                 ⬅
               </button>
-              <h2 className="boardTitle">{currentBoard.name}</h2>
+              <BoardTitle
+                currentBoard={currentBoard}
+                setCurrentBoard={setCurrentBoard}
+                boards={boards}
+                setBoards={setBoards}
+              />
             </div>
           ) : null}
         </div>
@@ -154,7 +160,12 @@ function App() {
           }}
         />
       ) : (
-        <Board cards={cards} lists={lists} hasDataFetched={hasDataFetched} />
+        <Board
+          cards={cards}
+          lists={lists}
+          hasDataFetched={hasDataFetched}
+          currentBoard={currentBoard}
+        />
       )}
     </div>
   );

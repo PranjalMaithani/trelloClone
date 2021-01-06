@@ -58,6 +58,16 @@ export async function updateList(prevList, currentList, nextList) {
   return;
 }
 
+export async function updateBoard(boardId, value) {
+  await fetch(
+    `https://api.trello.com/1/boards/${boardId}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${value}`,
+    {
+      method: "PUT",
+    }
+  );
+  return;
+}
+
 export async function deleteCard(cardId) {
   await fetch(
     `https://api.trello.com/1/cards/${cardId}?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}`,

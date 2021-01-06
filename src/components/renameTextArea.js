@@ -2,7 +2,7 @@ import { handleKeyDown, useClickOutside } from "../utils/lib.js";
 import { useRef, forwardRef } from "react";
 
 export const RenameTextArea = forwardRef(
-  ({ defaultValue, confirmAction }, ref) => {
+  ({ defaultValue, confirmAction, classes }, ref) => {
     const textAreaRef = useRef();
     useClickOutside(textAreaRef, confirmAction);
 
@@ -14,12 +14,12 @@ export const RenameTextArea = forwardRef(
           defaultValue={defaultValue}
           autoFocus
           rows="1"
-          className="listEditor cardText listTitle"
-          onFocus={(event) => {
-            adjustHeight(event.currentTarget, 28);
-          }}
+          className={classes}
           onKeyDown={(event) => {
             handleKeyDown(event, confirmAction, confirmAction);
+          }}
+          onFocus={(event) => {
+            adjustHeight(event.currentTarget, 28);
           }}
           onChange={(event) => {
             adjustHeight(event.currentTarget, 28);
