@@ -1,19 +1,21 @@
 import { randomVividColor } from "../utils/lib.js";
 import { deleteBoard } from "../utils/updateData.js";
 import { addBoard } from "../utils/createData.js";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import { handleKeyDown } from "../utils/lib.js";
 import { Loader } from "./loader/loader.js";
+import {
+  TrelloBoardContext,
+  CurrentBoardContext,
+} from "../resources/dataContext.js";
 
-export function BoardSelection({
-  boards,
-  setBoards,
-  setCurrentBoard,
-  hasFetchedBoards,
-}) {
+export function BoardSelection({ setCurrentBoard, hasFetchedBoards }) {
   const [isCreatingNewBoard, setCreatingNewBoard] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const currentBoard = useRef(null);
+  const currentBoardSelected = useRef(null);
+
+  const { boards, setBoards } = useContext(TrelloBoardContext);
+  const { currentBoard } = useContext(CurrentBoardContext);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
@@ -34,7 +36,7 @@ export function BoardSelection({
         className="cardButton listButton deleteButton"
         onClick={(event) => {
           event.stopPropagation();
-          currentBoard.current = board;
+          currentBoardSelected.current = board;
           setIsDeleting(true);
         }}
       >
@@ -135,41 +137,43 @@ export function BoardSelection({
 
   //FINAL RENDERING:
 
-  if (!hasFetchedBoards)
+  if (currentBoard !== null) return null;
+
+  if (!hasFetchedBoards || boards.length === 0)
     return (
       <div className="boardsSelectionWrapper">
         <Loader />
       </div>
     );
-  else
-    return (
-      <div className="boardsSelectionWrapper">
-        {isDeleting ? (
-          <DeleteConfirmation board={currentBoard.current} />
-        ) : (
-          <div>
-            {!isCreatingNewBoard ? (
-              <div>
-                <h1>Select a board:</h1>
-                <div className="boardsGrid">
-                  {boards.map((board) => {
-                    return <Board board={board} key={board.id} />;
-                  })}
-                  <div
-                    className="boardTile addBoardButton"
-                    onClick={() => {
-                      setCreatingNewBoard(true);
-                    }}
-                  >
-                    <span>+ Create new board</span>
-                  </div>
+
+  return (
+    <div className="boardsSelectionWrapper">
+      {isDeleting ? (
+        <DeleteConfirmation board={currentBoardSelected.current} />
+      ) : (
+        <div>
+          {!isCreatingNewBoard ? (
+            <div>
+              <h1>Select a board:</h1>
+              <div className="boardsGrid">
+                {boards.map((board) => {
+                  return <Board board={board} key={board.id} />;
+                })}
+                <div
+                  className="boardTile addBoardButton"
+                  onClick={() => {
+                    setCreatingNewBoard(true);
+                  }}
+                >
+                  <span>+ Create new board</span>
                 </div>
               </div>
-            ) : (
-              <NewBoardMenu />
-            )}
-          </div>
-        )}
-      </div>
-    );
+            </div>
+          ) : (
+            <NewBoardMenu />
+          )}
+        </div>
+      )}
+    </div>
+  );
 }

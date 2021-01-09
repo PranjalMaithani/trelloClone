@@ -1,8 +1,13 @@
 import { asyncCatch } from "../utils/lib.js";
 import { updateCardPosition, updateList } from "../utils/updateData.js";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useContext } from "react";
+import {
+  TrelloCardsContext,
+  TrelloListsContext,
+} from "../resources/dataContext.js";
 
-export function handleDragEnd(result, cards, setCards, lists, setLists) {
+export function handleDragEnd(result, lists, setLists, cards, setCards) {
   if (!result.destination) return;
 
   const { source, destination } = result;
@@ -148,11 +153,13 @@ export function DraggableCard(props) {
   );
 }
 
-export function DragMaster({ cards, setCards, lists, setLists, children }) {
+export function DragMaster({ children }) {
+  const { cards, setCards } = useContext(TrelloCardsContext);
+  const { lists, setLists } = useContext(TrelloListsContext);
   return (
     <DragDropContext
       onDragEnd={(result) => {
-        handleDragEnd(result, cards, setCards, lists, setLists);
+        handleDragEnd(result, lists, setLists, cards, setCards);
       }}
     >
       {children}

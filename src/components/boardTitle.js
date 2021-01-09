@@ -2,14 +2,17 @@ import { updateBoard } from "../utils/updateData.js";
 import { forwardRef, useRef, useState } from "react";
 import { asyncCatch, useClickOutside, handleKeyDown } from "../utils/lib.js";
 
-export function BoardTitle({
-  currentBoard,
-  setCurrentBoard,
-  boards,
-  setBoards,
-}) {
+import {
+  TrelloBoardContext,
+  CurrentBoardContext,
+} from "../resources/dataContext.js";
+import { useContext } from "react";
+
+export function BoardTitle() {
   const [renaming, setRenaming] = useState(false);
   const boardRenameRef = useRef(null);
+  const { boards, setBoards } = useContext(TrelloBoardContext);
+  const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
 
   const confirmBoardRename = () => {
     if (!boardRenameRef.current) return;

@@ -1,14 +1,21 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { addCard, addList } from "../utils/createData.js";
 import { updateListValue } from "../utils/updateData.js";
 import { archiveList } from "../utils/updateData.js";
 import { handleKeyDown, useClickOutside, asyncCatch } from "../utils/lib.js";
 import { RenameTextArea } from "./renameTextArea.js";
+import {
+  TrelloListsContext,
+  TrelloCardsContext,
+} from "../resources/dataContext.js";
 
 export function List(props) {
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const listRenameRef = useRef(null);
+
+  const { lists, setLists } = useContext(TrelloListsContext);
+  const { cards, setCards } = useContext(TrelloCardsContext);
 
   const cancelAction = () => {
     setIsAddingCard(false);
@@ -22,9 +29,9 @@ export function List(props) {
     if (cardEditorText === "") return;
 
     const newCard = await addCard(props.id, cardEditorText);
-    const tempArr = [...props.cards];
+    const tempArr = [...cards];
     tempArr[props.index].push(newCard);
-    props.setCards(tempArr);
+    setCards(tempArr);
   };
 
   const enableEditing = () => {
@@ -32,13 +39,13 @@ export function List(props) {
   };
 
   const deleteList = async (listId, listIndex) => {
-    const masterListsArray = [...props.lists];
+    const masterListsArray = [...lists];
     const filteredLists = masterListsArray.filter((list) => list.id !== listId);
-    props.setLists(filteredLists);
+    setLists(filteredLists);
 
-    const masterCardsArray = [...props.cards];
+    const masterCardsArray = [...cards];
     masterCardsArray.splice(listIndex, 1);
-    props.setCards(masterCardsArray);
+    setCards(masterCardsArray);
     await archiveList(listId);
   };
 
@@ -77,11 +84,11 @@ export function List(props) {
       return;
     }
     asyncCatch(updateListValue, props.id, newValue);
-    const newListsArray = props.lists.map((list) => {
+    const newListsArray = lists.map((list) => {
       if (list.id === props.id) return { ...list, name: newValue };
       else return list;
     });
-    props.setLists(newListsArray);
+    setLists(newListsArray);
     setRenaming(false);
   };
 
@@ -156,8 +163,10 @@ function NewCardInput({ confirmAction, cancelAction }) {
   );
 }
 
-export function AddListField({ boardId, setLists, setCards }) {
+export function AddListField({ boardId }) {
   const [enabled, setEnabled] = useState(false);
+  const { setLists } = useContext(TrelloListsContext);
+  const { setCards } = useContext(TrelloCardsContext);
 
   const confirmAction = async (event) => {
     event.preventDefault();

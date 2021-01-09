@@ -1,11 +1,14 @@
 import { deleteCard } from "../utils/updateData.js";
 import { CardEditor } from "../utils/cardEditor.js";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
+import { TrelloCardsContext } from "../resources/dataContext.js";
 
-export function Card({ card, listIndex, cards, setCards }) {
+export function Card({ card, listIndex }) {
   const cardRef = useRef(null);
   const currentCard = useRef(null); //current card values for editing
   const [isEditing, setIsEditing] = useState(false);
+
+  const { cards, setCards } = useContext(TrelloCardsContext);
 
   function EditButton() {
     return (

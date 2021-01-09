@@ -7,18 +7,18 @@ import {
   fetchBoardCards,
 } from "./utils/fetchData.js";
 
-import { Loader } from "./components/loader/loader.js";
-import { BoardSelection } from "./components/boardSelection.js";
-import { BoardTitle } from "./components/boardTitle.js";
-import { List, AddListField } from "./components/list.js";
-import { Card } from "./components/card.js";
-import { filterCardsArray } from "./utils/cardsSort.js";
 import {
-  DragMaster,
-  DroppableBoard,
-  DraggableDroppableList,
-  DraggableCard,
-} from "./components/dragAndDropComponents.js";
+  TrelloBoardContext,
+  TrelloCardsContext,
+  TrelloListsContext,
+  HasDataFetchedContext,
+  CurrentBoardContext,
+} from "./resources/dataContext";
+
+import { BoardSelection } from "./components/boardSelection.js";
+import { Board } from "./components/board.js";
+import { Header } from "./components/header.js";
+import { filterCardsArray } from "./utils/cardsSort.js";
 
 function App() {
   const [boards, setBoards] = React.useState([]);
@@ -30,13 +30,24 @@ function App() {
   const [currentBoard, setCurrentBoard] = React.useState(null);
   const lastActiveBoard = React.useRef(null);
 
+  const boardsValue = React.useMemo(() => ({ boards, setBoards }), [boards]);
+  const listsValue = React.useMemo(() => ({ lists, setLists }), [lists]);
+  const cardsValue = React.useMemo(() => ({ cards, setCards }), [cards]);
+  const currentBoardValue = React.useMemo(
+    () => ({ currentBoard, setCurrentBoard }),
+    [currentBoard]
+  );
+  const hasDataFetchedValue = React.useMemo(
+    () => ({ hasDataFetched, setHasDataFetched }),
+    [hasDataFetched]
+  );
+
   React.useEffect(() => {
     const assign = async () => {
       const boardsArr = await fetchBoards();
       setBoards(boardsArr);
       setHasFetchedBoards(true);
     };
-
     assign();
   }, []);
 
@@ -54,122 +65,34 @@ function App() {
     if (currentBoard !== null) assign();
   }, [currentBoard]);
 
-  const Board = React.useCallback(
-    ({ lists, cards, hasDataFetched, currentBoard }) => {
-      return (
-        <div className="board">
-          {!hasDataFetched && <Loader />}
-          <DragMaster
-            cards={cards}
-            setCards={setCards}
-            lists={lists}
-            setLists={setLists}
-          >
-            <DroppableBoard>
-              {lists.map((list, listIndex) => (
-                <DraggableDroppableList
-                  key={list.id}
-                  list={list}
-                  listIndex={listIndex}
-                >
-                  <List
-                    name={list.name}
-                    id={list.id}
-                    index={listIndex}
-                    lists={lists}
-                    setLists={setLists}
-                    cards={cards}
-                    setCards={setCards}
-                  >
-                    <ul>
-                      {cards[listIndex] &&
-                        cards[listIndex].map((card, cardIndex) => (
-                          <DraggableCard
-                            key={card.id}
-                            card={card}
-                            cardIndex={cardIndex}
-                          >
-                            <Card
-                              card={card}
-                              listIndex={listIndex}
-                              cards={cards}
-                              setCards={setCards}
-                            />
-                          </DraggableCard>
-                        ))}
-                    </ul>
-                  </List>
-                </DraggableDroppableList>
-              ))}
-              {hasDataFetched && (
-                <AddListField
-                  boardId={currentBoard.id}
-                  setLists={setLists}
-                  setCards={setCards}
-                />
-              )}
-            </DroppableBoard>
-          </DragMaster>
-        </div>
-      );
-    },
-    []
-  );
-
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="headerTab">
-          {currentBoard !== null ? (
-            <div className="boardUIbuttons">
-              <button
-                onClick={() => {
-                  setCurrentBoard(null);
-                  setHasDataFetched(false);
-                }}
-                className="backButton"
-              >
-                ⬅
-              </button>
-              <BoardTitle
-                currentBoard={currentBoard}
-                setCurrentBoard={setCurrentBoard}
-                boards={boards}
-                setBoards={setBoards}
-              />
-            </div>
-          ) : null}
-        </div>
-        <h1>TRULLO</h1>
-        <div className="headerTab" style={{ justifyContent: "flex-end" }}>
-          <span className="headerAuthorName">Pranjal Maithani</span>
-        </div>
-      </header>
-      {currentBoard === null ? (
-        <BoardSelection
-          boards={boards}
-          setBoards={setBoards}
-          hasFetchedBoards={hasFetchedBoards}
-          setCurrentBoard={(board) => {
-            if (board !== lastActiveBoard.current) {
-              setLists([]);
-              setCards([]);
-              setHasDataFetched(false);
-            } else {
-              setHasDataFetched(true);
-            }
-            setCurrentBoard(board);
-            lastActiveBoard.current = board;
-          }}
-        />
-      ) : (
-        <Board
-          cards={cards}
-          lists={lists}
-          hasDataFetched={hasDataFetched}
-          currentBoard={currentBoard}
-        />
-      )}
+      <TrelloBoardContext.Provider value={boardsValue}>
+        <CurrentBoardContext.Provider value={currentBoardValue}>
+          <Header />
+          <BoardSelection
+            hasFetchedBoards={hasFetchedBoards}
+            setCurrentBoard={(board) => {
+              if (board !== lastActiveBoard.current) {
+                setLists([]);
+                setCards([]);
+                setHasDataFetched(false);
+              } else {
+                setHasDataFetched(true);
+              }
+              setCurrentBoard(board);
+              lastActiveBoard.current = board;
+            }}
+          />
+          <TrelloListsContext.Provider value={listsValue}>
+            <TrelloCardsContext.Provider value={cardsValue}>
+              <HasDataFetchedContext.Provider value={hasDataFetchedValue}>
+                <Board />
+              </HasDataFetchedContext.Provider>
+            </TrelloCardsContext.Provider>
+          </TrelloListsContext.Provider>
+        </CurrentBoardContext.Provider>
+      </TrelloBoardContext.Provider>
     </div>
   );
 }
