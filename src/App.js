@@ -15,12 +15,14 @@ import {
   CurrentBoardContext,
 } from "./resources/dataContext";
 
+import { LoginScreen } from "./components/LoginScreen";
 import { BoardSelection } from "./components/boardSelection.js";
 import { Board } from "./components/board.js";
 import { Header } from "./components/header.js";
 import { filterCardsArray } from "./utils/cardsSort.js";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [boards, setBoards] = React.useState([]);
   const [lists, setLists] = React.useState([]);
   const [cards, setCards] = React.useState([]); //will have sub arrays per list [["peel", "chop", "cook", "eat"], ["brainstorm", "sketch", "draw"]]
@@ -48,8 +50,10 @@ function App() {
       setBoards(boardsArr);
       setHasFetchedBoards(true);
     };
-    assign();
-  }, []);
+    if (isLoggedIn) {
+      assign();
+    }
+  }, [isLoggedIn]);
 
   React.useEffect(() => {
     const assign = async () => {
@@ -70,7 +74,9 @@ function App() {
       <TrelloBoardContext.Provider value={boardsValue}>
         <CurrentBoardContext.Provider value={currentBoardValue}>
           <Header />
+          <LoginScreen isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           <BoardSelection
+            isLoggedIn={isLoggedIn}
             hasFetchedBoards={hasFetchedBoards}
             setCurrentBoard={(board) => {
               if (board !== lastActiveBoard.current) {

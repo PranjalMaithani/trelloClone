@@ -348,7 +348,7 @@ ul li {
 }
 
 .cancelButton:hover {
-  background-color: #aaaaaa;
+  background-color: #a1a1a1;
 }
 
 .boardsGrid {
@@ -384,6 +384,7 @@ ul li {
   left: 0;
   right: 0;
   bottom: 0;
+  overflow: scroll;
 }
 
 .board {
@@ -497,4 +498,16 @@ ul li {
 .messageWindowButtonsWrapper {
   display: flex;
   justify-content: flex-end;
+}
+
+.loginWindow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
 }

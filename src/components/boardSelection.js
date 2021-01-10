@@ -9,7 +9,11 @@ import {
   CurrentBoardContext,
 } from "../resources/dataContext.js";
 
-export function BoardSelection({ setCurrentBoard, hasFetchedBoards }) {
+export function BoardSelection({
+  setCurrentBoard,
+  hasFetchedBoards,
+  isLoggedIn,
+}) {
   const [isCreatingNewBoard, setCreatingNewBoard] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const currentBoardSelected = useRef(null);
@@ -69,6 +73,7 @@ export function BoardSelection({ setCurrentBoard, hasFetchedBoards }) {
     const newBoard = await addBoard(boardName);
     setBoards((prevState) => [...prevState, newBoard]);
     setCurrentBoard(newBoard);
+    setCreatingNewBoard(false);
   };
 
   const cancelNewBoard = () => {
@@ -137,9 +142,11 @@ export function BoardSelection({ setCurrentBoard, hasFetchedBoards }) {
 
   //FINAL RENDERING:
 
-  if (currentBoard !== null) return null;
+  //if user has selected a board or is logged out
+  if (currentBoard !== null || isLoggedIn === false) return null;
 
-  if (!hasFetchedBoards || boards.length === 0)
+  //if we are fetching boards and the user is logged in, show a loader
+  if (!hasFetchedBoards)
     return (
       <div className="boardsSelectionWrapper">
         <Loader />

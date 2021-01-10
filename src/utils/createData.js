@@ -1,6 +1,9 @@
+import { apiKey } from "../resources/apiContext";
+import { getToken } from "../resources/token";
+
 export async function addCard(listId, name) {
   const newCard = await fetch(
-    `https://api.trello.com/1/cards?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&idList=${listId}&name=${name}&pos=bottom`,
+    `https://api.trello.com/1/cards?key=${apiKey}&token=${getToken()}&idList=${listId}&name=${name}&pos=bottom`,
     {
       method: "POST",
     }
@@ -11,7 +14,7 @@ export async function addCard(listId, name) {
 
 export async function addList(boardId, name) {
   const newList = await fetch(
-    `https://api.trello.com/1/lists?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${name}&idBoard=${boardId}&pos=bottom`,
+    `https://api.trello.com/1/lists?key=${apiKey}&token=${getToken()}&name=${name}&idBoard=${boardId}&pos=bottom`,
     {
       method: "POST",
     }
@@ -22,7 +25,7 @@ export async function addList(boardId, name) {
 
 export async function addBoard(name) {
   const newBoard = await fetch(
-    `https://api.trello.com/1/boards/?key=${process.env.REACT_APP_TRELLO_KEY}&token=${process.env.REACT_APP_TRELLO_TOKEN}&name=${name}`,
+    `https://api.trello.com/1/boards/?key=${apiKey}&token=${getToken()}&name=${name}`,
     {
       method: "POST",
     }
