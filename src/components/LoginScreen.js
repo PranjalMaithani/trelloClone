@@ -32,12 +32,21 @@ function getTokenFromHash() {
   }
 }
 
+function getCurrentUrl() {
+  const url = window.location.href;
+  const hashIndex = url.indexOf("#");
+  return url.slice(0, hashIndex);
+}
+
 export const LoginScreen = ({ isLoggedIn, setIsLoggedIn }) => {
   useEffect(() => {
     const currentToken = getTokenFromHash();
     if (currentToken !== "") {
+      const currentUrl = getCurrentUrl();
       LoginUser(currentToken);
       setIsLoggedIn(true);
+
+      window.history.replaceState(null, "", currentUrl);
     }
   }, [setIsLoggedIn]);
 
