@@ -2,7 +2,9 @@
   --backgroundColor: rgb(52, 52, 77);
   --backgroundColor-darker: rgb(30, 30, 43);
   --font-dark: #172b4d;
+  --font-light: #5e6c84;
   --base: #ebecf0;
+  --base-lighter: #f4f5f7;
 }
 body {
   color: var(--font-dark, #172b4d);
@@ -92,19 +94,20 @@ body {
 }
 
 .cardModal {
-  background-color: var(--base, #ebecf0);
+  background-color: var(--base-lighter, #f4f5f7);
   margin: 48px auto;
   padding: 12px 34px;
+  padding-bottom: 24px;
   width: 700px;
   height: auto;
   position: relative;
-
   border-radius: 2px;
 }
 
 h3 {
   font-size: 16px;
   line-height: 20px;
+  margin: 0;
 }
 
 .cardWrapper {
@@ -116,7 +119,7 @@ h3 {
     Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 14px;
   line-height: 20px;
-  font-weight: 450;
+  font-weight: 500;
   margin: 0 0 4px;
   overflow: hidden;
   text-decoration: none;
@@ -138,6 +141,10 @@ h3 {
   margin-right: 4px;
   cursor: pointer;
   visibility: hidden;
+}
+
+.quietText {
+  color: var(--font-light, #5e6c84);
 }
 
 .cardWrapper:hover .cardButton {
@@ -560,6 +567,37 @@ ul li {
   text-align: center;
 }
 
+.cardHeading {
+  font-size: 20px;
+  font-weight: 800;
+}
+
 .cardDesc {
   max-width: 100%;
+}
+
+.cardDescButton {
+  background-color: rgba(9, 30, 66, 0.04);
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+.cardDescButton:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+}
+
+.editDescButton {
+  color: var(--font-dark, black);
+  background-color: rgba(9, 30, 66, 0.04);
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  text-decoration: none;
+  margin-left: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.editDescButton:hover {
+  background-color: rgba(9, 30, 66, 0.08);
 }

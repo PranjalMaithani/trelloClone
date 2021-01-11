@@ -86,14 +86,13 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
           <RenameTextArea
             defaultValue={currentCard.name}
             confirmAction={confirmTitleUpdate}
-            classes="listEditor cardText listTitle"
+            classes="listEditor cardText listTitle cardHeading"
             ref={modalTitleRef}
             isPressEnterToSubmit={true}
           />
         ) : (
           <h3
-            className="cardText listTitle"
-            style={{ fontSize: 20, fontWeight: 800 }}
+            className="cardText listTitle cardHeading"
             onClick={(event) => {
               event.stopPropagation();
               setIsEditing("title");
@@ -102,22 +101,31 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
             {currentCard.name}
           </h3>
         )}
-        <p>
+        <p className="cardText quietText">
           in list <u>{ListNameFromId(currentCard.idList)}</u>
         </p>
-        <h3>Description</h3>
-        {currentCard.desc && (
-          <div style={{ minHeight: 50 }}>
-            {isEditing !== "desc" && (
-              <button onClick={startEditingDesc} className="cancelButton">
-                Edit
-              </button>
-            )}
-          </div>
-        )}
+        <br></br>
+        <div style={{ display: "flex", alignItems: "center", minHeight: 50 }}>
+          <h3>Description</h3>
+          {currentCard.desc && (
+            <>
+              {isEditing !== "desc" && (
+                <button
+                  onClick={startEditingDesc}
+                  className="cardText editDescButton"
+                >
+                  Edit
+                </button>
+              )}
+            </>
+          )}
+        </div>
         <div>
           {isEditing !== "desc" && (
-            <p className="cardText cardDesc" onClick={startEditingDesc}>
+            <p
+              className="cardText cardDesc cardDescButton"
+              onClick={startEditingDesc}
+            >
               {currentCard.desc
                 ? currentCard.desc
                 : "Add a more detailed description..."}
