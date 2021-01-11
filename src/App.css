@@ -2,13 +2,15 @@
   --backgroundColor: rgb(52, 52, 77);
   --backgroundColor-darker: rgb(30, 30, 43);
   --font-dark: #172b4d;
+  --base: #ebecf0;
 }
-
+body {
+  color: var(--font-dark, #172b4d);
+}
 .App {
   height: 100vh;
   overflow-x: auto;
   overflow-y: hidden;
-  color: var(--font-dark, #172b4d);
   position: absolute;
   top: 0;
   left: 0;
@@ -89,6 +91,22 @@
   margin-bottom: 8px;
 }
 
+.cardModal {
+  background-color: var(--base, #ebecf0);
+  margin: 48px auto;
+  padding: 12px 34px;
+  width: 700px;
+  height: auto;
+  position: relative;
+
+  border-radius: 2px;
+}
+
+h3 {
+  font-size: 16px;
+  line-height: 20px;
+}
+
 .cardWrapper {
   position: relative;
 }
@@ -158,7 +176,7 @@
   display: flex;
   flex-direction: column;
   width: 272px;
-  background-color: #ebecf0;
+  background-color: var(--base, #ebecf0);
   border-radius: 3px;
   box-sizing: border-box;
   max-height: 80vh;
@@ -216,6 +234,16 @@
   width: 100%;
   box-sizing: border-box;
   height: 28px;
+  animation: 0.2s ease-out 0s 1 outlineFadeIn;
+}
+
+@keyframes outlineFadeIn {
+  0% {
+    box-shadow: inset 0 0 0 2px #709bb400;
+  }
+  100% {
+    box-shadow: inset 0 0 0 2px #0079bf;
+  }
 }
 
 .addButton {
@@ -284,6 +312,8 @@ ul li {
   position: absolute;
   z-index: 10;
   animation: 0.1s ease-out 0s 1 fadeIn;
+  overflow-y: auto;
+  justify-content: center;
 }
 
 .fadeIn {
@@ -435,6 +465,8 @@ ul li {
   filter: none;
 
   transition: 0.2s;
+  border-radius: 3px;
+  border-style: none;
 }
 
 .boardTitleStatic {
@@ -526,4 +558,8 @@ ul li {
   right: 0;
   bottom: 0;
   text-align: center;
+}
+
+.cardDesc {
+  max-width: 100%;
 }

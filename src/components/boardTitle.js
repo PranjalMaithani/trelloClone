@@ -9,7 +9,7 @@ import {
 import { useContext } from "react";
 
 export function BoardTitle() {
-  const [renaming, setRenaming] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const boardRenameRef = useRef(null);
   const { boards, setBoards } = useContext(TrelloBoardContext);
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
@@ -19,7 +19,7 @@ export function BoardTitle() {
 
     const newValue = boardRenameRef.current.value;
     if (newValue === "") {
-      setRenaming(false);
+      setIsRenaming(false);
       return;
     }
     asyncCatch(updateBoard, currentBoard.id, newValue);
@@ -30,7 +30,7 @@ export function BoardTitle() {
       } else return board;
     });
     setBoards(newBoardsArray);
-    setRenaming(false);
+    setIsRenaming(false);
   };
 
   const RenameBoardInput = forwardRef((props, ref) => {
@@ -54,11 +54,11 @@ export function BoardTitle() {
 
   return (
     <div>
-      {!renaming ? (
+      {!isRenaming ? (
         <span
           className="boardTitle boardTitleStatic"
           onClick={() => {
-            setRenaming(true);
+            setIsRenaming(true);
           }}
         >
           {currentBoard.name}

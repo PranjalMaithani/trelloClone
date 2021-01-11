@@ -11,7 +11,7 @@ import {
 
 export function List(props) {
   const [isAddingCard, setIsAddingCard] = useState(false);
-  const [renaming, setRenaming] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
   const listRenameRef = useRef(null);
 
   const { lists, setLists } = useContext(TrelloListsContext);
@@ -67,7 +67,7 @@ export function List(props) {
       <button
         className="cardButton listButton editButton"
         onClick={() => {
-          setRenaming(true);
+          setIsRenaming(true);
         }}
       >
         Edit
@@ -80,7 +80,7 @@ export function List(props) {
 
     const newValue = listRenameRef.current.value;
     if (newValue === "") {
-      setRenaming(false);
+      setIsRenaming(false);
       return;
     }
     asyncCatch(updateListValue, props.id, newValue);
@@ -89,12 +89,12 @@ export function List(props) {
       else return list;
     });
     setLists(newListsArray);
-    setRenaming(false);
+    setIsRenaming(false);
   };
 
   return (
     <div className="list">
-      {!renaming ? (
+      {!isRenaming ? (
         <div className="listHeader">
           <span className="cardText listTitle">{props.name}</span>
           <div className="cardButtonsWrapper">
@@ -109,6 +109,7 @@ export function List(props) {
             confirmAction={confirmListRename}
             classes="listEditor cardText listTitle"
             ref={listRenameRef}
+            isPressEnterToSubmit={true}
           />
         </div>
       )}
@@ -229,3 +230,9 @@ export function AddListField({ boardId }) {
     </span>
   );
 }
+
+export const ListNameFromId = (id) => {
+  const { lists } = useContext(TrelloListsContext);
+  const listObj = lists.find((list) => list.id === id);
+  return listObj.name;
+};

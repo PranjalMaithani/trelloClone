@@ -2,7 +2,7 @@ import { handleKeyDown, useClickOutside } from "../utils/lib.js";
 import { useRef, forwardRef } from "react";
 
 export const RenameTextArea = forwardRef(
-  ({ defaultValue, confirmAction, classes }, ref) => {
+  ({ defaultValue, confirmAction, classes, isPressEnterToSubmit }, ref) => {
     const textAreaRef = useRef();
     useClickOutside(textAreaRef, confirmAction);
 
@@ -16,7 +16,11 @@ export const RenameTextArea = forwardRef(
           rows="1"
           className={classes}
           onKeyDown={(event) => {
-            handleKeyDown(event, confirmAction, confirmAction);
+            if (isPressEnterToSubmit) {
+              handleKeyDown(event, confirmAction, confirmAction);
+            } else {
+              handleKeyDown(event, () => {}, confirmAction);
+            }
           }}
           onFocus={(event) => {
             adjustHeight(event.currentTarget, 28);

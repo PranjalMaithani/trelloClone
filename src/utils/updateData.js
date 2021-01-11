@@ -30,9 +30,9 @@ export async function updateCardPosition(
   return;
 }
 
-export async function updateCardValue(cardId, value) {
+export async function updateCardValue(cardId, name, desc) {
   await fetch(
-    `https://api.trello.com/1/cards/${cardId}?key=${apiKey}&token=${getToken()}&name=${value}`,
+    `https://api.trello.com/1/cards/${cardId}?key=${apiKey}&token=${getToken()}&name=${name}&desc=${desc}`,
     {
       method: "PUT",
       headers: {

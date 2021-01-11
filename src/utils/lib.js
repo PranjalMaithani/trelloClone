@@ -40,3 +40,12 @@ export function randomVividColor(minSat, maxSat, minLightness, maxLightness) {
     l: randomLightness,
   };
 }
+
+export function createModal(divId) {
+  const checkElement = document.getElementById(divId);
+  if (!checkElement) {
+    let element = document.createElement("div");
+    element.setAttribute("id", divId);
+    document.body.appendChild(element);
+  }
+}

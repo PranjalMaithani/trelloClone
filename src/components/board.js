@@ -17,6 +17,15 @@ import {
   CurrentBoardContext,
 } from "../resources/dataContext.js";
 import { useContext } from "react";
+// import {
+//   BrowserRouter as Router,
+//   Switch,
+//   Route,
+//   Link,
+//   useRouteMatch,
+//   useParams,
+//   Redirect,
+// } from "react-router-dom";
 
 export const Board = () => {
   const { currentBoard } = useContext(CurrentBoardContext);
