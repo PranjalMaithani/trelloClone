@@ -33,6 +33,18 @@
   bottom: 0;
 }
 
+.App-footer {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .headerTab {
   display: flex;
   flex-grow: 1;
@@ -271,6 +283,10 @@ ul li {
   height: 100vh;
   position: absolute;
   z-index: 10;
+  animation: 0.1s ease-out 0s 1 fadeIn;
+}
+
+.fadeIn {
   animation: 0.1s ease-out 0s 1 fadeIn;
 }
 

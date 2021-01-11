@@ -19,6 +19,7 @@ import { LoginScreen } from "./components/LoginScreen";
 import { BoardSelection } from "./components/boardSelection.js";
 import { Board } from "./components/board.js";
 import { Header } from "./components/header.js";
+import { Footer } from "./components/footer.js";
 import { filterCardsArray } from "./utils/cardsSort.js";
 
 function App() {
@@ -99,6 +100,19 @@ function App() {
           </TrelloListsContext.Provider>
         </CurrentBoardContext.Provider>
       </TrelloBoardContext.Provider>
+      <Footer
+        isLoggedIn={isLoggedIn}
+        logOutResetData={() => {
+          setIsLoggedIn(false);
+          setCurrentBoard(null);
+          setHasDataFetched(false);
+          setHasFetchedBoards(false);
+          setBoards([]);
+          setLists([]);
+          setCards([]);
+          lastActiveBoard.current = null;
+        }}
+      />
     </div>
   );
 }
