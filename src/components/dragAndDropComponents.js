@@ -119,7 +119,6 @@ export function DraggableDroppableList(props) {
                   {...providedListDroppable.droppableProps}
                 >
                   {props.children}
-                  {providedListDroppable.placeholder}
                 </div>
               )}
             </Droppable>

@@ -75,7 +75,7 @@ body {
 .card {
   margin-top: 2px;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   word-wrap: break-word;
 
   box-sizing: border-box;
@@ -86,6 +86,7 @@ body {
   margin-bottom: 8px;
   max-width: 300px;
   min-height: 20px;
+  max-height: 250px;
   text-decoration: none;
   z-index: 3;
 
@@ -207,7 +208,7 @@ h3 {
 }
 
 .listCards {
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .listHeader {
@@ -428,6 +429,10 @@ ul li {
   position: relative;
 }
 
+.boardTileText {
+  overflow: hidden;
+}
+
 .boardsSelectionWrapper {
   display: flex;
   flex-direction: column;
@@ -590,7 +595,7 @@ ul li {
   color: var(--font-dark, black);
   background-color: rgba(9, 30, 66, 0.04);
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
   padding: 6px 12px;
   text-decoration: none;
   margin-left: 8px;

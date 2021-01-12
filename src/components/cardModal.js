@@ -19,7 +19,7 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
   useEffect(() => {
     const cancelAllActions = (event) => {
       if (event.key === "Escape") {
-        if (isEditing === "desc") {
+        if (isEditing !== null) {
           setIsEditing(null);
         } else {
           disableModal();
@@ -123,7 +123,9 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
         <div>
           {isEditing !== "desc" && (
             <p
-              className="cardText cardDesc cardDescButton"
+              className={`cardText cardDesc ${
+                !currentCard.desc && "cardDescButton"
+              }`}
               onClick={startEditingDesc}
             >
               {currentCard.desc

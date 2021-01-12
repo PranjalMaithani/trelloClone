@@ -33,12 +33,13 @@ export const RenameTextArea = forwardRef(
     );
   }
 );
+
 //Credits for textArea adjustHeight
 //http://bdadam.com/blog/automatically-adapting-the-height-textarea.html
 function adjustHeight(el, minHeight) {
   // compute the height difference which is caused by border and outline
-  var outerHeight = parseInt(window.getComputedStyle(el).height, 10);
-  var diff = outerHeight - el.clientHeight;
+  const outerHeight = parseInt(window.getComputedStyle(el).height, 10);
+  const diff = outerHeight - el.clientHeight;
 
   // set the height to 0 in case of it has to be shrinked
   el.style.height = 0;

@@ -8,6 +8,7 @@ import {
   TrelloListsContext,
   TrelloCardsContext,
 } from "../resources/dataContext.js";
+import { DraggableDroppableList } from "./dragAndDropComponents";
 
 export function List(props) {
   const [isAddingCard, setIsAddingCard] = useState(false);
@@ -24,7 +25,7 @@ export function List(props) {
   const confirmAction = async (event) => {
     event.preventDefault();
     const cardEditorText = event.currentTarget.input.value;
-    setIsAddingCard(false);
+    event.currentTarget.input.value = "";
 
     if (cardEditorText === "") return;
 
@@ -116,13 +117,14 @@ export function List(props) {
       <div className="listCards">{props.children}</div>
       <div>
         {!isAddingCard && <AddCardButton enableEditing={enableEditing} />}
-        {isAddingCard && (
-          <NewCardInput
-            confirmAction={confirmAction}
-            cancelAction={cancelAction}
-          />
-        )}
       </div>
+
+      {isAddingCard && (
+        <NewCardInput
+          confirmAction={confirmAction}
+          cancelAction={cancelAction}
+        />
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import {
   DragMaster,
   DroppableBoard,
   DraggableDroppableList,
+  DroppableList,
   DraggableCard,
 } from "./dragAndDropComponents";
 
@@ -49,18 +50,16 @@ export const Board = () => {
               listIndex={listIndex}
             >
               <List name={list.name} id={list.id} index={listIndex}>
-                <ul>
-                  {cards[listIndex] &&
-                    cards[listIndex].map((card, cardIndex) => (
-                      <DraggableCard
-                        key={card.id}
-                        card={card}
-                        cardIndex={cardIndex}
-                      >
-                        <Card card={card} listIndex={listIndex} />
-                      </DraggableCard>
-                    ))}
-                </ul>
+                {cards[listIndex] &&
+                  cards[listIndex].map((card, cardIndex) => (
+                    <DraggableCard
+                      key={card.id}
+                      card={card}
+                      cardIndex={cardIndex}
+                    >
+                      <Card card={card} listIndex={listIndex} />
+                    </DraggableCard>
+                  ))}
               </List>
             </DraggableDroppableList>
           ))}

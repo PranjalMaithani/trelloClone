@@ -62,7 +62,7 @@ export function BoardSelection({
         <div className="cardButtonsWrapper">
           <DeleteButton board={board} />
         </div>
-        <span>{board.name}</span>
+        <span className="boardTileText">{board.name}</span>
       </div>
     );
   };
