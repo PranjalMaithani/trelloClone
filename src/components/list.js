@@ -8,7 +8,6 @@ import {
   TrelloListsContext,
   TrelloCardsContext,
 } from "../resources/dataContext.js";
-import { DraggableDroppableList } from "./dragAndDropComponents";
 
 export function List(props) {
   const [isAddingCard, setIsAddingCard] = useState(false);
@@ -114,7 +113,11 @@ export function List(props) {
           />
         </div>
       )}
-      <div className="listCards">{props.children}</div>
+
+      <div className="listCards">
+        {props.children}
+        {props.placeholder} {/*placeholder for dragging card by react dnd*/}
+      </div>
       <div>
         {!isAddingCard && <AddCardButton enableEditing={enableEditing} />}
       </div>

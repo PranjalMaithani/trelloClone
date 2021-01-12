@@ -83,16 +83,7 @@ export function handleDragEnd(result, lists, setLists, cards, setCards) {
 export function DroppableBoard(props) {
   return (
     <Droppable droppableId="board" direction="horizontal" type="LISTS">
-      {(providedBoardDroppable, snapshotBoardDroppable) => (
-        <div
-          ref={providedBoardDroppable.innerRef}
-          {...providedBoardDroppable.droppableProps}
-          className="listsContainer"
-        >
-          {props.children}
-          {providedBoardDroppable.placeholder}
-        </div>
-      )}
+      {props.children}
     </Droppable>
   );
 }
@@ -113,14 +104,7 @@ export function DraggableDroppableList(props) {
             }}
           >
             <Droppable droppableId={`list${props.listIndex}`} type="CARDS">
-              {(providedListDroppable, snapshotListDroppable) => (
-                <div
-                  ref={providedListDroppable.innerRef}
-                  {...providedListDroppable.droppableProps}
-                >
-                  {props.children}
-                </div>
-              )}
+              {props.children}
             </Droppable>
           </div>
         </div>

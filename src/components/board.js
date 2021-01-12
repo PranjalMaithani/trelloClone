@@ -4,7 +4,6 @@ import {
   DragMaster,
   DroppableBoard,
   DraggableDroppableList,
-  DroppableList,
   DraggableCard,
 } from "./dragAndDropComponents";
 
@@ -43,27 +42,48 @@ export const Board = () => {
       {!hasDataFetched && <Loader />}
       <DragMaster>
         <DroppableBoard>
-          {lists.map((list, listIndex) => (
-            <DraggableDroppableList
-              key={list.id}
-              list={list}
-              listIndex={listIndex}
+          {(providedBoardDroppable, snapshotBoardDroppable) => (
+            <div
+              ref={providedBoardDroppable.innerRef}
+              {...providedBoardDroppable.droppableProps}
+              className="listsContainer"
             >
-              <List name={list.name} id={list.id} index={listIndex}>
-                {cards[listIndex] &&
-                  cards[listIndex].map((card, cardIndex) => (
-                    <DraggableCard
-                      key={card.id}
-                      card={card}
-                      cardIndex={cardIndex}
+              {lists.map((list, listIndex) => (
+                <DraggableDroppableList
+                  key={list.id}
+                  list={list}
+                  listIndex={listIndex}
+                >
+                  {(providedListDroppable, snapshotListDroppable) => (
+                    <div
+                      ref={providedListDroppable.innerRef}
+                      {...providedListDroppable.droppableProps}
                     >
-                      <Card card={card} listIndex={listIndex} />
-                    </DraggableCard>
-                  ))}
-              </List>
-            </DraggableDroppableList>
-          ))}
-          {hasDataFetched && <AddListField boardId={currentBoard.id} />}
+                      <List
+                        name={list.name}
+                        id={list.id}
+                        index={listIndex}
+                        placeholder={providedListDroppable.placeholder}
+                      >
+                        {cards[listIndex] &&
+                          cards[listIndex].map((card, cardIndex) => (
+                            <DraggableCard
+                              key={card.id}
+                              card={card}
+                              cardIndex={cardIndex}
+                            >
+                              <Card card={card} listIndex={listIndex} />
+                            </DraggableCard>
+                          ))}
+                      </List>
+                    </div>
+                  )}
+                </DraggableDroppableList>
+              ))}
+              {providedBoardDroppable.placeholder}
+              {hasDataFetched && <AddListField boardId={currentBoard.id} />}
+            </div>
+          )}
         </DroppableBoard>
       </DragMaster>
     </div>
