@@ -1,20 +1,38 @@
-import { useClickOutside, createModal } from "../utils/lib.js";
+import { useClickOutside, createModal, convertToSlug } from "../utils/lib.js";
 import { useRef, useContext, useState, useEffect } from "react";
 import { confirmCardUpdate } from "../utils/cardEditor";
 import { ListNameFromId } from "./list";
 import { RenameTextArea } from "./renameTextArea";
 
-import { TrelloCardsContext } from "../resources/dataContext.js";
+import {
+  TrelloBoardsContext,
+  TrelloCardsContext,
+} from "../resources/dataContext.js";
+import { getElementFromKey } from "./board.js";
+import { Redirect, useRouteMatch } from "react-router-dom";
+
 import ReactDOM from "react-dom";
 
-export const CardModal = ({ currentCard, disableModal, listIndex }) => {
+export const CardModal = ({ currentCard, listIndex, disableModal }) => {
+  let match = useRouteMatch("/:b/:shortLink");
+
   const divId = "modal-root";
   createModal(divId);
 
   const { cards, setCards } = useContext(TrelloCardsContext);
+  const { boards } = useContext(TrelloBoardsContext);
+
   const modalTitleRef = useRef();
   const modalDescRef = useRef();
   const [isEditing, setIsEditing] = useState(null);
+  const [isModalActive, setIsModalActive] = useState(true);
+
+  useEffect(() => {
+    if (!isModalActive) {
+      setIsEditing(null);
+      disableModal();
+    }
+  }, [isModalActive, disableModal]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
@@ -22,7 +40,7 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
         if (isEditing !== null) {
           setIsEditing(null);
         } else {
-          disableModal();
+          setIsModalActive(false);
         }
       }
     };
@@ -30,7 +48,7 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
     return () => {
       document.removeEventListener("keydown", cancelAllActions);
     };
-  }, [isEditing, disableModal]);
+  }, [isEditing]);
 
   const startEditingDesc = (event) => {
     event.stopPropagation();
@@ -68,9 +86,16 @@ export const CardModal = ({ currentCard, disableModal, listIndex }) => {
   const cardModalRef = useRef();
   useClickOutside(cardModalRef, () => {
     if (isEditing === null) {
-      disableModal();
+      setIsModalActive(false);
     }
   });
+
+  if (!isModalActive || match.params.b !== "c") {
+    const board = getElementFromKey(boards, currentCard.idBoard, "id");
+    return (
+      <Redirect to={`/b/${board.shortLink}/${convertToSlug(board.name)}`} />
+    );
+  }
 
   return ReactDOM.createPortal(
     <div

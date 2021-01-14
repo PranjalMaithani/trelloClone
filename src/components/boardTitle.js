@@ -3,7 +3,7 @@ import { forwardRef, useRef, useState } from "react";
 import { asyncCatch, useClickOutside, handleKeyDown } from "../utils/lib.js";
 
 import {
-  TrelloBoardContext,
+  TrelloBoardsContext,
   CurrentBoardContext,
 } from "../resources/dataContext.js";
 import { useContext } from "react";
@@ -11,7 +11,7 @@ import { useContext } from "react";
 export function BoardTitle() {
   const [isRenaming, setIsRenaming] = useState(false);
   const boardRenameRef = useRef(null);
-  const { boards, setBoards } = useContext(TrelloBoardContext);
+  const { boards, setBoards } = useContext(TrelloBoardsContext);
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
 
   const confirmBoardRename = () => {
@@ -56,7 +56,7 @@ export function BoardTitle() {
     <div>
       {!isRenaming ? (
         <span
-          className="boardTitle boardTitleStatic"
+          className="boardTitle"
           onClick={() => {
             setIsRenaming(true);
           }}

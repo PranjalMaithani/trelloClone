@@ -1,6 +1,7 @@
 import { apiKey, apiToken } from "../resources/apiContext";
 import { setToken } from "../resources/token";
 import { useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
 const LoginButton = () => {
   const currentUrl = window.location.href;
@@ -25,7 +26,7 @@ const LoginUser = (value) => {
 function getTokenFromHash() {
   const hash = window.location.hash;
   if (hash.length > 0) {
-    const token = hash.slice(7); //slice the "#token" from the start of the string
+    const token = hash.slice(7); //slice the "#token=" from the start of the string
     return token;
   } else {
     return "";
@@ -45,13 +46,12 @@ export const LoginScreen = ({ isLoggedIn, setIsLoggedIn }) => {
       const currentUrl = getCurrentUrl();
       LoginUser(currentToken);
       setIsLoggedIn(true);
-
       window.history.replaceState(null, "", currentUrl);
     }
   }, [setIsLoggedIn]);
 
   if (isLoggedIn) {
-    return null;
+    return <Redirect to="/boards" />;
   }
 
   return (

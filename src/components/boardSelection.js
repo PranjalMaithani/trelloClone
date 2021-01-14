@@ -1,31 +1,39 @@
 import { randomVividColor } from "../utils/lib.js";
 import { deleteBoard } from "../utils/updateData.js";
 import { addBoard } from "../utils/createData.js";
-import { useRef, useState, useEffect, useContext } from "react";
-import { handleKeyDown } from "../utils/lib.js";
+import { useRef, useState, useEffect, useContext, useCallback } from "react";
+import { handleKeyDown, convertToSlug } from "../utils/lib.js";
 import { Loader } from "./loader/loader.js";
 import {
-  TrelloBoardContext,
+  TrelloBoardsContext,
   CurrentBoardContext,
+  HasDataFetchedContext,
 } from "../resources/dataContext.js";
+import { Link } from "react-router-dom";
 
-export function BoardSelection({
-  setCurrentBoard,
-  hasFetchedBoards,
-  isLoggedIn,
-}) {
-  const [isCreatingNewBoard, setCreatingNewBoard] = useState(false);
+export function BoardSelection({ moveToBoard, hasFetchedBoards }) {
+  const [isCreatingNewBoard, setIsCreatingNewBoard] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const currentBoardSelected = useRef(null);
 
-  const { boards, setBoards } = useContext(TrelloBoardContext);
-  const { currentBoard } = useContext(CurrentBoardContext);
+  const { setHasDataFetched } = useContext(HasDataFetchedContext);
+
+  const { boards, setBoards } = useContext(TrelloBoardsContext);
+  const { setCurrentBoard } = useContext(CurrentBoardContext);
+
+  //resetting everything on component load
+  useEffect(() => {
+    setCurrentBoard(null);
+    setIsCreatingNewBoard(false);
+    setIsDeleting(false);
+    setHasDataFetched(false);
+  }, [setCurrentBoard, setHasDataFetched]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {
       if (event.key === "Escape") {
         setIsDeleting(false);
-        setCreatingNewBoard(false);
+        setIsCreatingNewBoard(false);
       }
     };
     document.addEventListener("keydown", cancelAllActions);
@@ -39,6 +47,7 @@ export function BoardSelection({
       <button
         className="cardButton listButton deleteButton"
         onClick={(event) => {
+          event.preventDefault();
           event.stopPropagation();
           currentBoardSelected.current = board;
           setIsDeleting(true);
@@ -49,36 +58,62 @@ export function BoardSelection({
     );
   };
 
-  const Board = ({ board }) => {
-    const color = randomVividColor(60, 70, 60, 70);
-    return (
-      <div
-        className="boardTile cardText"
-        style={{ backgroundColor: `hsl(${color.h},${color.s}%,${color.l}%)` }}
-        onClick={() => {
-          setCurrentBoard(board);
-        }}
-      >
-        <div className="cardButtonsWrapper">
-          <DeleteButton board={board} />
-        </div>
-        <span className="boardTileText">{board.name}</span>
-      </div>
-    );
-  };
+  const Board = useCallback(
+    ({ board }) => {
+      const color = randomVividColor(60, 70, 60, 70);
+      const slugBoardName = convertToSlug(board.name);
+      return (
+        <Link
+          to={`/b/${board.shortLink}/${slugBoardName}`}
+          className="boardTile cardText"
+          style={{ backgroundColor: `hsl(${color.h},${color.s}%,${color.l}%)` }}
+          onClick={() => {
+            moveToBoard(board);
+          }}
+        >
+          <div className="cardButtonsWrapper">
+            <DeleteButton board={board} />
+          </div>
+          <span className="boardTileText">{board.name}</span>
+        </Link>
+      );
+    },
+    [moveToBoard]
+  );
 
   const createNewBoard = async (event) => {
     event.preventDefault();
     const boardName = event.currentTarget.input.value;
     const newBoard = await addBoard(boardName);
     setBoards((prevState) => [...prevState, newBoard]);
-    setCurrentBoard(newBoard);
-    setCreatingNewBoard(false);
+    moveToBoard(newBoard);
+    setIsCreatingNewBoard(false);
   };
 
   const cancelNewBoard = () => {
-    setCreatingNewBoard(false);
+    setIsCreatingNewBoard(false);
     setIsDeleting(false);
+  };
+
+  const NewBoardButton = (numberOfBoards) => {
+    if (numberOfBoards === 10) {
+      return (
+        <div className="cardText boardTile addBoardButton">
+          Maximum board limit reached
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className="cardText boardTile addBoardButton"
+          onClick={() => {
+            setIsCreatingNewBoard(true);
+          }}
+        >
+          + Create new board
+        </div>
+      );
+    }
   };
 
   function NewBoardMenu() {
@@ -142,9 +177,6 @@ export function BoardSelection({
 
   //FINAL RENDERING:
 
-  //if user has selected a board or is logged out
-  if (currentBoard !== null || isLoggedIn === false) return null;
-
   //if we are fetching boards and the user is logged in, show a loader
   if (!hasFetchedBoards)
     return (
@@ -153,32 +185,25 @@ export function BoardSelection({
       </div>
     );
 
+  //otherwise show the board selection screen
+
   return (
     <div className="boardsSelectionWrapper">
-      {isDeleting ? (
+      {isDeleting && (
         <DeleteConfirmation board={currentBoardSelected.current} />
-      ) : (
+      )}
+      {isCreatingNewBoard && <NewBoardMenu />}
+
+      {!isDeleting && !isCreatingNewBoard && (
         <div>
-          {!isCreatingNewBoard ? (
-            <div>
-              <h1>Select a board:</h1>
-              <div className="boardsGrid">
-                {boards.map((board) => {
-                  return <Board board={board} key={board.id} />;
-                })}
-                <div
-                  className="boardTile addBoardButton"
-                  onClick={() => {
-                    setCreatingNewBoard(true);
-                  }}
-                >
-                  <span>+ Create new board</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <NewBoardMenu />
-          )}
+          <h1>Select a board:</h1>
+          <div className="boardsGrid">
+            {boards.map((board) => (
+              <Board board={board} key={board.id} />
+            ))}
+
+            <NewBoardButton />
+          </div>
         </div>
       )}
     </div>

@@ -1,32 +1,35 @@
 import { BoardTitle } from "./boardTitle.js";
 import { useContext } from "react";
 
-import {
-  CurrentBoardContext,
-  HasDataFetchedContext,
-} from "../resources/dataContext.js";
+import { CurrentBoardContext } from "../resources/dataContext.js";
+import { Link, useRouteMatch } from "react-router-dom";
 
 export const Header = () => {
-  const { setHasDataFetched } = useContext(HasDataFetchedContext);
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
+  const match = useRouteMatch("/:b");
 
   return (
     <header className="App-header">
       <div className="headerTab">
-        {currentBoard !== null ? (
+        {currentBoard !== null && (
           <div className="boardUIbuttons">
-            <button
-              onClick={() => {
-                setCurrentBoard(null);
-                setHasDataFetched(false);
-              }}
+            <Link
+              to="/boards"
               className="backButton"
+              onClick={(event) => {
+                if (match.params.b !== "b") {
+                  event.preventDefault();
+                  return;
+                }
+                setCurrentBoard(null);
+              }}
             >
               ⬅
-            </button>
+            </Link>
+
             <BoardTitle />
           </div>
-        ) : null}
+        )}
       </div>
       <h1>TRULLO</h1>
       <div className="headerTab" style={{ justifyContent: "flex-end" }}>

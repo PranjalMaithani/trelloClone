@@ -6,9 +6,15 @@
   --base: #ebecf0;
   --base-lighter: #f4f5f7;
 }
+
+a {
+  text-decoration: none;
+}
+
 body {
   color: var(--font-dark, #172b4d);
 }
+
 .App {
   height: 100vh;
   overflow-x: auto;
@@ -94,6 +100,10 @@ body {
   margin-bottom: 8px;
 }
 
+.card:hover {
+  background-color: rgb(247, 247, 247);
+}
+
 .cardModal {
   background-color: var(--base-lighter, #f4f5f7);
   margin: 48px auto;
@@ -161,7 +171,7 @@ h3 {
 }
 
 .editButton:hover {
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
   opacity: 1;
 }
 
@@ -178,6 +188,7 @@ h3 {
   top: 5px;
   right: 4px;
   display: flex;
+  z-index: 5;
 }
 
 .list {
@@ -209,6 +220,7 @@ h3 {
 
 .listCards {
   overflow-y: hidden;
+  min-height: 20px;
 }
 
 .listHeader {
@@ -462,8 +474,6 @@ ul li {
 .boardTitle {
   display: block;
   font-size: 1.5em;
-  margin-top: 0.83em;
-  margin-bottom: 0.83em;
   margin-left: 0;
   margin-right: 0;
   font-weight: bold;
@@ -472,6 +482,8 @@ ul li {
   white-space: nowrap;
 
   margin-left: 10px;
+  padding-left: 4px;
+
   color: #bfc9da;
   max-width: 400px;
   filter: none;
@@ -479,10 +491,6 @@ ul li {
   transition: 0.2s;
   border-radius: 3px;
   border-style: none;
-}
-
-.boardTitleStatic {
-  padding-left: 4px;
 }
 
 .boardTitleEditor {
@@ -511,6 +519,7 @@ ul li {
 
 .boardUIbuttons {
   display: flex;
+  align-items: center;
   margin-left: 25px;
 }
 
@@ -521,10 +530,11 @@ ul li {
   color: #bfc9da;
   background-color: transparent;
   border-radius: 3px;
+  padding: 5px 8px;
 }
 
 .backButton:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   cursor: pointer;
 }

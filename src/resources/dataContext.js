@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export const TrelloBoardContext = createContext({
+export const TrelloBoardsContext = createContext({
   boards: [],
   setBoards: () => {},
 });

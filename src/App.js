@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "./App.css";
 
 import {
@@ -8,13 +8,24 @@ import {
 } from "./utils/fetchData.js";
 
 import {
-  TrelloBoardContext,
+  TrelloBoardsContext,
   TrelloCardsContext,
   TrelloListsContext,
   HasDataFetchedContext,
   CurrentBoardContext,
 } from "./resources/dataContext";
 
+import {
+  getTokenFromStorage,
+  setToken,
+  setTokenToNull,
+} from "./resources/token";
+
+// import { getError, resetError } from "./resources/errorRecorder";
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import { ErrorWindow } from "./components/ErrorWindow";
 import { LoginScreen } from "./components/LoginScreen";
 import { BoardSelection } from "./components/boardSelection.js";
 import { Board } from "./components/board.js";
@@ -46,6 +57,14 @@ function App() {
   );
 
   React.useEffect(() => {
+    const tokenStorage = getTokenFromStorage();
+    if (tokenStorage !== "") {
+      setToken(tokenStorage);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  React.useEffect(() => {
     const assign = async () => {
       const boardsArr = await fetchBoards();
       setBoards(boardsArr);
@@ -70,50 +89,76 @@ function App() {
     if (currentBoard !== null) assign();
   }, [currentBoard]);
 
+  const moveToBoard = useCallback((board) => {
+    if (board !== lastActiveBoard.current) {
+      setLists([]);
+      setCards([]);
+      setHasDataFetched(false);
+    } else {
+      setHasDataFetched(true);
+    }
+    setCurrentBoard(board);
+    lastActiveBoard.current = board;
+  }, []);
+
   return (
-    <div className="App">
-      <TrelloBoardContext.Provider value={boardsValue}>
-        <CurrentBoardContext.Provider value={currentBoardValue}>
-          <Header />
-          <LoginScreen isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-          <BoardSelection
-            isLoggedIn={isLoggedIn}
-            hasFetchedBoards={hasFetchedBoards}
-            setCurrentBoard={(board) => {
-              if (board !== lastActiveBoard.current) {
-                setLists([]);
-                setCards([]);
-                setHasDataFetched(false);
-              } else {
-                setHasDataFetched(true);
-              }
-              setCurrentBoard(board);
-              lastActiveBoard.current = board;
-            }}
-          />
-          <TrelloListsContext.Provider value={listsValue}>
-            <TrelloCardsContext.Provider value={cardsValue}>
-              <HasDataFetchedContext.Provider value={hasDataFetchedValue}>
-                <Board />
-              </HasDataFetchedContext.Provider>
-            </TrelloCardsContext.Provider>
-          </TrelloListsContext.Provider>
-        </CurrentBoardContext.Provider>
-      </TrelloBoardContext.Provider>
-      <Footer
-        isLoggedIn={isLoggedIn}
-        logOutResetData={() => {
-          setIsLoggedIn(false);
-          setCurrentBoard(null);
-          setHasDataFetched(false);
-          setHasFetchedBoards(false);
-          setBoards([]);
-          setLists([]);
-          setCards([]);
-          lastActiveBoard.current = null;
-        }}
-      />
-    </div>
+    <Router>
+      <div className="App">
+        <TrelloBoardsContext.Provider value={boardsValue}>
+          <CurrentBoardContext.Provider value={currentBoardValue}>
+            <Header />
+            <Switch>
+              {/* {getError().message !== null && (
+                <Route path="/:error">
+                  <ErrorWindow message={getError().message} />
+                </Route>
+              )} */}
+              <Route exact path="/">
+                <LoginScreen
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                />
+              </Route>
+              {!isLoggedIn && (
+                <Route path="/">
+                  <ErrorWindow message="You need to be logged in to access that" />
+                </Route>
+              )}
+              <Route exact path="/boards">
+                <BoardSelection
+                  hasFetchedBoards={hasFetchedBoards}
+                  moveToBoard={moveToBoard}
+                />
+              </Route>
+
+              <Route path="/:b/:shortLink/:name?">
+                <TrelloListsContext.Provider value={listsValue}>
+                  <TrelloCardsContext.Provider value={cardsValue}>
+                    <HasDataFetchedContext.Provider value={hasDataFetchedValue}>
+                      <Board />
+                    </HasDataFetchedContext.Provider>
+                  </TrelloCardsContext.Provider>
+                </TrelloListsContext.Provider>
+              </Route>
+            </Switch>
+          </CurrentBoardContext.Provider>
+        </TrelloBoardsContext.Provider>
+        <Footer
+          isLoggedIn={isLoggedIn}
+          logOutResetData={() => {
+            setIsLoggedIn(false);
+            setCurrentBoard(null);
+            setHasDataFetched(false);
+            setHasFetchedBoards(false);
+            setBoards([]);
+            setLists([]);
+            setCards([]);
+            lastActiveBoard.current = null;
+            setTokenToNull();
+          }}
+        />
+      </div>
+    </Router>
   );
 }
 

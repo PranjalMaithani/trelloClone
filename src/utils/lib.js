@@ -11,6 +11,7 @@ export async function asyncCatch(callback, ...args) {
   } catch (error) {
     console.log("An error occured while updating");
     console.log(error);
+    alert("Failed to connect to the server");
   }
 }
 
@@ -48,4 +49,10 @@ export function createModal(divId) {
     element.setAttribute("id", divId);
     document.body.appendChild(element);
   }
+}
+
+export function convertToSlug(Text) {
+  return Text.toLowerCase()
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");
 }

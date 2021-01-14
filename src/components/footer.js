@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const Footer = ({ logOutResetData, isLoggedIn }) => {
   return (
     <div className="App-footer">
@@ -14,13 +16,15 @@ export const Footer = ({ logOutResetData, isLoggedIn }) => {
         }}
       >
         {isLoggedIn && (
-          <button
-            onClick={logOutResetData}
-            className="cancelButton fadeIn"
-            style={{ margin: "auto 15px" }}
-          >
-            Log Out
-          </button>
+          <Link to="/">
+            <button
+              onClick={logOutResetData}
+              className="cancelButton fadeIn"
+              style={{ margin: "auto 15px" }}
+            >
+              Log Out
+            </button>
+          </Link>
         )}
         <a
           href="https://github.com/PranjalMaithani/trelloClone"
