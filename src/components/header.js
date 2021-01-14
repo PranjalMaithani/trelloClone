@@ -11,7 +11,7 @@ export const Header = () => {
   return (
     <header className="App-header">
       <div className="headerTab">
-        {currentBoard !== null && (
+        {currentBoard !== null && match.params.b && (
           <div className="boardUIbuttons">
             <Link
               to="/boards"
