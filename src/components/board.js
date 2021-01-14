@@ -137,13 +137,3 @@ export const Board = () => {
 export const getElementFromKey = (array, id, key) => {
   return array.find((board) => board[key] === id);
 };
-
-//since cardsArray has subArrays, we need to go through each of those subArrays until we find the card
-// const findCardFromId = (cardsArray, id, key) => {
-//   for (let i = 0; i < cardsArray.length; ++i) {
-//     const card = getElementFromKey(cardsArray[i], id, key);
-//     if (card !== undefined) return card;
-//   }
-//   //if the card doesn't exist
-//   return null;
-// };
