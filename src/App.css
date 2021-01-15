@@ -476,6 +476,16 @@ ul li {
   position: relative;
 }
 
+@media (max-width: 900px) {
+  .boardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .boardTile {
+    width: 140px;
+  }
+}
+
 .boardTileText {
   overflow: hidden;
 }
