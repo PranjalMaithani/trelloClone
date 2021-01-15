@@ -55,6 +55,23 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 900px) {
+  .App-footer {
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+  .App-footer p {
+    display: none;
+  }
+}
+
+.footerButtons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  justify-self: flex-end;
+}
+
 .headerTab {
   display: flex;
   flex-grow: 1;
@@ -76,6 +93,24 @@ body {
   font-weight: 100;
   letter-spacing: 20px;
   color: #9350d3;
+}
+
+@media (max-width: 900px) {
+  .headerTabRight {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+  .headerTab {
+    overflow: visible;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .trulloLogo {
+    display: none;
+  }
 }
 
 .card {
@@ -198,7 +233,7 @@ h3 {
   background-color: var(--base, #ebecf0);
   border-radius: 3px;
   box-sizing: border-box;
-  max-height: 80vh;
+  max-height: calc(100vh - 155px);
   white-space: normal;
 
   margin-bottom: 0;
@@ -219,7 +254,7 @@ h3 {
 }
 
 .listCards {
-  overflow-y: hidden;
+  overflow-y: auto;
   min-height: 20px;
 }
 
@@ -539,27 +574,6 @@ ul li {
   cursor: pointer;
 }
 
-.messageWindow {
-  color: white;
-  font-size: 1.3em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 30vw;
-  min-height: 25vh;
-  padding: 30px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-
-  animation: 0.4s ease-out 0s 1 popUpMenu;
-}
-
-.messageWindowText {
-  font-size: 16px;
-  text-align: center;
-  color: whitesmoke;
-}
-
 @keyframes popUpMenu {
   0% {
     transform: translate(0, 20px);
@@ -621,4 +635,33 @@ ul li {
 
 .editDescButton:hover {
   background-color: rgba(9, 30, 66, 0.08);
+}
+
+.messageWindow {
+  color: white;
+  font-size: 1.3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+  min-height: 25vh;
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
+  animation: 0.4s ease-out 0s 1 popUpMenu;
+}
+
+.messageWindowText {
+  font-size: 16px;
+  text-align: center;
+  color: whitesmoke;
+}
+
+.messageWindowInput {
+  margin: 0;
+}
+
+.messageWindow * {
+  max-width: 100%;
 }

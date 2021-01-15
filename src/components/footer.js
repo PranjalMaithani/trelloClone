@@ -8,11 +8,9 @@ export const Footer = ({ logOutResetData, isLoggedIn }) => {
         data. Changes will be saved.
       </p>
       <div
+        className="footerButtons"
         style={{
           minWidth: "20%", //retain elements position even if logout button is absent
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
         }}
       >
         {isLoggedIn && (

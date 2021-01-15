@@ -35,8 +35,11 @@ export const Header = () => {
           </div>
         )}
       </div>
-      <h1>TRULLO</h1>
-      <div className="headerTab" style={{ justifyContent: "flex-end" }}>
+      <h1 className="trulloLogo">TRULLO</h1>
+      <div
+        className="headerTab headerTabRight"
+        style={{ justifyContent: "flex-end" }}
+      >
         <span className="headerAuthorName">Pranjal Maithani</span>
       </div>
     </header>

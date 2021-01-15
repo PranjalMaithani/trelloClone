@@ -131,7 +131,7 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
             autoComplete="off"
             name="input"
             autoFocus
-            className="cardText modalInnerCardEditor boardTitle boardTitleEditor"
+            className="boardTitle boardTitleEditor messageWindowInput"
           />
           <div className="messageWindowButtonsWrapper">
             <button className="confirmButton" type="submit">
