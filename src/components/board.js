@@ -32,7 +32,6 @@ export const Board = () => {
 
   const { hasDataFetched } = useContext(HasDataFetchedContext);
   const [error, setError] = useState(null);
-  const [hasLoadedData, setHasLoadedData] = useState(false);
   let isLoading = useRef(false);
 
   let match = useRouteMatch("/:b/:shortLink");
@@ -41,11 +40,10 @@ export const Board = () => {
   const resetData = useCallback(() => {
     setError(null);
     isLoading.current = false;
-    setHasLoadedData(false);
   }, []);
 
   useEffect(() => {
-    setHasLoadedData(true);
+    isLoading.current = false;
   }, [hasDataFetched]);
 
   useEffect(() => {
@@ -53,13 +51,7 @@ export const Board = () => {
   }, [resetData]);
 
   useEffect(() => {
-    if (hasLoadedData) {
-      isLoading.current = false;
-    }
-  }, [hasLoadedData]);
-
-  useEffect(() => {
-    if (isLoading.current || hasLoadedData) {
+    if (isLoading.current) {
       return;
     }
 
@@ -108,16 +100,7 @@ export const Board = () => {
     };
 
     getBoardFromDB(match.params.shortLink);
-  }, [
-    boards,
-    cards,
-    setCurrentBoard,
-    match,
-    history,
-    isLoading,
-    resetData,
-    hasLoadedData,
-  ]);
+  }, [boards, cards, setCurrentBoard, match, history, isLoading, resetData]);
 
   if (error) {
     const type =
