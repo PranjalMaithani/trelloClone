@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./App.css";
 
 import {
@@ -21,8 +21,6 @@ import {
   setTokenToNull,
 } from "./resources/token";
 
-// import { getError, resetError } from "./resources/errorRecorder";
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ErrorWindow } from "./components/ErrorWindow";
@@ -40,6 +38,7 @@ function App() {
   const [cards, setCards] = React.useState([]); //will have sub arrays per list [["peel", "chop", "cook", "eat"], ["brainstorm", "sketch", "draw"]]
   const [hasDataFetched, setHasDataFetched] = React.useState(false);
   const [hasFetchedBoards, setHasFetchedBoards] = React.useState(false);
+  let isLoading = React.useRef(false);
 
   const [currentBoard, setCurrentBoard] = React.useState(null);
   const lastActiveBoard = React.useRef(null);
@@ -59,6 +58,8 @@ function App() {
   React.useEffect(() => {
     const tokenStorage = getTokenFromStorage();
     if (tokenStorage !== "") {
+      setHasDataFetched(false);
+      isLoading.current = false;
       setToken(tokenStorage);
       setIsLoggedIn(true);
     }
@@ -77,42 +78,55 @@ function App() {
 
   React.useEffect(() => {
     const assign = async () => {
+      if (isLoading.current) return;
+      isLoading.current = true;
       const listsArr = await fetchBoardLists(currentBoard.id);
       const cardsArr = await fetchBoardCards(currentBoard.id);
       const filteredCardsArr = filterCardsArray(listsArr, cardsArr);
-
       setLists(listsArr);
       setCards(filteredCardsArr);
       setHasDataFetched(true);
     };
 
-    if (currentBoard !== null) assign();
-  }, [currentBoard]);
+    if (currentBoard !== null && !isLoading.current) assign();
+  }, [currentBoard, isLoading]);
 
-  const moveToBoard = useCallback((board) => {
-    if (board !== lastActiveBoard.current) {
+  React.useEffect(() => {
+    if (hasDataFetched) {
+      isLoading.current = false;
+    }
+  }, [hasDataFetched]);
+
+  const moveToBoard = React.useCallback((board) => {
+    setCurrentBoard(board);
+    if (
+      lastActiveBoard.current === null ||
+      board.id !== lastActiveBoard.current.id
+    ) {
       setLists([]);
       setCards([]);
       setHasDataFetched(false);
+      isLoading.current = false;
     } else {
       setHasDataFetched(true);
     }
-    setCurrentBoard(board);
+
     lastActiveBoard.current = board;
   }, []);
+
+  React.useEffect(() => {
+    if (currentBoard && currentBoard !== lastActiveBoard.current) {
+      moveToBoard(currentBoard);
+    }
+  }, [currentBoard, moveToBoard]);
 
   return (
     <Router>
       <div className="App">
         <TrelloBoardsContext.Provider value={boardsValue}>
           <CurrentBoardContext.Provider value={currentBoardValue}>
-            <Header />
+            <Header hasFetchedBoards={hasFetchedBoards} />
             <Switch>
-              {/* {getError().message !== null && (
-                <Route path="/:error">
-                  <ErrorWindow message={getError().message} />
-                </Route>
-              )} */}
               <Route exact path="/">
                 <LoginScreen
                   isLoggedIn={isLoggedIn}
@@ -121,13 +135,14 @@ function App() {
               </Route>
               {!isLoggedIn && (
                 <Route path="/">
-                  <ErrorWindow message="You need to be logged in to access that" />
+                  <ErrorWindow message="You need to be logged in." />
                 </Route>
               )}
               <Route exact path="/boards">
                 <BoardSelection
                   hasFetchedBoards={hasFetchedBoards}
                   moveToBoard={moveToBoard}
+                  isLoading={isLoading}
                 />
               </Route>
 
@@ -139,6 +154,10 @@ function App() {
                     </HasDataFetchedContext.Provider>
                   </TrelloCardsContext.Provider>
                 </TrelloListsContext.Provider>
+              </Route>
+
+              <Route>
+                <ErrorWindow message="Page not found" />
               </Route>
             </Switch>
           </CurrentBoardContext.Provider>

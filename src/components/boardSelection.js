@@ -11,7 +11,7 @@ import {
 } from "../resources/dataContext.js";
 import { Link } from "react-router-dom";
 
-export function BoardSelection({ moveToBoard, hasFetchedBoards }) {
+export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
   const [isCreatingNewBoard, setIsCreatingNewBoard] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const currentBoardSelected = useRef(null);
@@ -27,7 +27,8 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards }) {
     setIsCreatingNewBoard(false);
     setIsDeleting(false);
     setHasDataFetched(false);
-  }, [setCurrentBoard, setHasDataFetched]);
+    isLoading.current = false;
+  }, [setCurrentBoard, setHasDataFetched, isLoading]);
 
   useEffect(() => {
     const cancelAllActions = (event) => {

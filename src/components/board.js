@@ -1,5 +1,5 @@
 import { Loader } from "./loader/loader";
-import { useEffect } from "react";
+import { useEffect, useState, useContext, useCallback, useRef } from "react";
 import {
   DragMaster,
   DroppableBoard,
@@ -9,6 +9,7 @@ import {
 
 import { List, AddListField } from "./list.js";
 import { Card } from "./card.js";
+import { ErrorWindow } from "./ErrorWindow";
 
 import {
   TrelloListsContext,
@@ -19,34 +20,61 @@ import {
 } from "../resources/dataContext.js";
 
 import { fetchCard, fetchBoard } from "../utils/fetchData";
+import { convertToSlug } from "../utils/lib";
 
-// import { setError } from "../resources/errorRecorder";
-
-import { useContext } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useRouteMatch, useHistory } from "react-router-dom";
 
 export const Board = () => {
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
   const { boards } = useContext(TrelloBoardsContext);
   const { lists } = useContext(TrelloListsContext);
   const { cards } = useContext(TrelloCardsContext);
+
   const { hasDataFetched } = useContext(HasDataFetchedContext);
+  const [error, setError] = useState(null);
+  const [hasLoadedData, setHasLoadedData] = useState(false);
+  let isLoading = useRef(false);
 
   let match = useRouteMatch("/:b/:shortLink");
+  let history = useHistory();
+
+  const resetData = useCallback(() => {
+    setError(null);
+    isLoading.current = false;
+    setHasLoadedData(false);
+  }, []);
 
   useEffect(() => {
-    let getBoard = getElementFromKey(
-      boards,
-      match.params.shortLink,
-      "shortLink"
-    );
+    setHasLoadedData(true);
+  }, [hasDataFetched]);
+
+  useEffect(() => {
+    resetData();
+  }, [resetData]);
+
+  useEffect(() => {
+    if (hasLoadedData) {
+      isLoading.current = false;
+    }
+  }, [hasLoadedData]);
+
+  useEffect(() => {
+    if (isLoading.current || hasLoadedData) {
+      return;
+    }
+
+    let getBoard;
 
     const getCardFromDB = async (cardId) => {
       const getCard = await fetchCard(cardId);
       //it's not a card url either, the user entered a wrong url
       if (getCard === undefined) {
         setCurrentBoard(null);
+        setError(true);
       } else {
+        history.replace(
+          `/c/${match.params.shortLink}/${convertToSlug(getCard.name)}`
+        );
         //getting the board for the card
         //if we have the boards already:
         if (boards.length > 0) {
@@ -57,33 +85,71 @@ export const Board = () => {
         }
         setCurrentBoard(getBoard);
       }
+
+      return () => {
+        resetData();
+      };
+    };
+    const getBoardFromDB = async (boardId) => {
+      isLoading.current = true;
+      getBoard = getElementFromKey(boards, match.params.shortLink, "shortLink");
+      if (getBoard === undefined) {
+        getBoard = await fetchBoard(boardId);
+      }
+      //it might be a card URL, if it's not a board
+      if (getBoard === undefined) {
+        getCardFromDB(match.params.shortLink);
+      } else {
+        setCurrentBoard(getBoard);
+        history.replace(
+          `/b/${match.params.shortLink}/${convertToSlug(getBoard.name)}`
+        );
+      }
     };
 
-    //it might be a card URL, if it's not a board
-    if (getBoard === undefined) {
-      getCardFromDB(match.params.shortLink);
-    } else {
-      setCurrentBoard(getBoard);
-    }
-  }, [boards, cards, setCurrentBoard, match]);
+    getBoardFromDB(match.params.shortLink);
+  }, [
+    boards,
+    cards,
+    setCurrentBoard,
+    match,
+    history,
+    isLoading,
+    resetData,
+    hasLoadedData,
+  ]);
 
-  // //if the board doesn't exist
-  // if (
-  //   boards.length > 0 &&
-  //   !getElementFromKey(boards, match.params.shortLink, "shortLink") &&
-  //   !findCardFromId(cards, match.params.shortLink, "shortLink")
-  // ) {
-  //   setError({ message: "Board doesn't exist.", data: {} });
-  //   return <Redirect to="/" />;
-  // }
+  if (error) {
+    const type =
+      match.params.b === "b"
+        ? "board"
+        : match.params.b === "c"
+        ? "card"
+        : "page";
+    return (
+      <div className="boardSelectionWrapper">
+        <ErrorWindow
+          message={`Couldn't find the ${type} you're looking for.`}
+          callback={resetData}
+        />
+      </div>
+    );
+  }
 
   if (currentBoard === null) {
     return null;
   }
 
+  if (isLoading.current && !hasDataFetched) {
+    return (
+      <div className="board">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="board">
-      {!hasDataFetched && <Loader />}
       <DragMaster>
         <DroppableBoard>
           {(providedBoardDroppable, snapshotBoardDroppable) => (
