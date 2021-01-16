@@ -107,10 +107,6 @@ body {
     width: 100%;
     max-width: 100%;
   }
-
-  .trulloLogo {
-    display: none;
-  }
 }
 
 .card {
@@ -148,6 +144,12 @@ body {
   height: auto;
   position: relative;
   border-radius: 2px;
+}
+
+@media (max-width: 500px) {
+  .cardModal {
+    max-width: 300px;
+  }
 }
 
 h3 {
@@ -243,6 +245,15 @@ h3 {
   padding: 0 4px;
   min-height: 0;
   z-index: 5;
+}
+
+@media (max-height: 750px) {
+  .list {
+    max-height: calc(100vh - 185px);
+  }
+  .body {
+    overflow-y: hidden;
+  }
 }
 
 .listsContainer {

@@ -43,7 +43,7 @@ export const Board = () => {
   }, []);
 
   useEffect(() => {
-    isLoading.current = false;
+    if (hasDataFetched) isLoading.current = false;
   }, [hasDataFetched]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export const Board = () => {
   }, [resetData]);
 
   useEffect(() => {
-    if (isLoading.current) {
+    if (isLoading.current || currentBoard) {
       return;
     }
 
@@ -76,6 +76,7 @@ export const Board = () => {
           getBoard = await fetchBoard(getCard.idBoard);
         }
         setCurrentBoard(getBoard);
+        isLoading.current = false;
       }
 
       return () => {
@@ -84,7 +85,7 @@ export const Board = () => {
     };
     const getBoardFromDB = async (boardId) => {
       isLoading.current = true;
-      getBoard = getElementFromKey(boards, match.params.shortLink, "shortLink");
+      getBoard = getElementFromKey(boards, match.params.shortLink, "shortUrl");
       if (getBoard === undefined) {
         getBoard = await fetchBoard(boardId);
       }
@@ -93,6 +94,7 @@ export const Board = () => {
         getCardFromDB(match.params.shortLink);
       } else {
         setCurrentBoard(getBoard);
+        isLoading.current = false;
         history.replace(
           `/b/${match.params.shortLink}/${convertToSlug(getBoard.name)}`
         );
@@ -100,7 +102,16 @@ export const Board = () => {
     };
 
     getBoardFromDB(match.params.shortLink);
-  }, [boards, cards, setCurrentBoard, match, history, isLoading, resetData]);
+  }, [
+    boards,
+    cards,
+    currentBoard,
+    setCurrentBoard,
+    match,
+    history,
+    isLoading,
+    resetData,
+  ]);
 
   if (error) {
     const type =
@@ -123,7 +134,7 @@ export const Board = () => {
     return null;
   }
 
-  if (isLoading.current && !hasDataFetched) {
+  if (isLoading.current || !hasDataFetched) {
     return (
       <div className="board">
         <Loader />

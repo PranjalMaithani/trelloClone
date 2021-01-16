@@ -9,7 +9,7 @@ import {
   CurrentBoardContext,
   HasDataFetchedContext,
 } from "../resources/dataContext.js";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
   const [isCreatingNewBoard, setIsCreatingNewBoard] = useState(false);
@@ -20,6 +20,8 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
 
   const { boards, setBoards } = useContext(TrelloBoardsContext);
   const { setCurrentBoard } = useContext(CurrentBoardContext);
+
+  const history = useHistory();
 
   //resetting everything on component load
   useEffect(() => {
@@ -87,8 +89,9 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
     const boardName = event.currentTarget.input.value;
     const newBoard = await addBoard(boardName);
     setBoards((prevState) => [...prevState, newBoard]);
-    moveToBoard(newBoard);
     setIsCreatingNewBoard(false);
+    moveToBoard(newBoard);
+    history.push(newBoard.url.slice(18), null); //removing https://trello.com from the url part
   };
 
   const cancelNewBoard = () => {
@@ -96,7 +99,7 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
     setIsDeleting(false);
   };
 
-  const NewBoardButton = (numberOfBoards) => {
+  const NewBoardButton = ({ numberOfBoards }) => {
     if (numberOfBoards === 10) {
       return (
         <div className="cardText boardTile addBoardButton">
@@ -203,7 +206,7 @@ export function BoardSelection({ moveToBoard, hasFetchedBoards, isLoading }) {
               <Board board={board} key={board.id} />
             ))}
 
-            <NewBoardButton />
+            <NewBoardButton numberOfBoards={boards.length} />
           </div>
         </div>
       )}

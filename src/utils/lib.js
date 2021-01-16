@@ -1,4 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+const throttle = (callback, limit) => {
+  let lastCallback;
+  let lastRan;
+  return function () {
+    const context = this;
+    const args = arguments;
+    if (!lastRan) {
+      console.log("applying Firsttime");
+      callback.apply(context, args);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastCallback);
+      lastCallback = setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          console.log("applying ");
+          callback.apply(context, args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
+    }
+  };
+};
 
 export const handleKeyDown = (event, confirmAction, cancelAction) => {
   if (event.key === "Escape") cancelAction(event);
@@ -28,6 +51,25 @@ export function useClickOutside(innerRef, callback) {
     };
   }, [callback, innerRef]);
 }
+
+export const useResize = () => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  function handleResize() {
+    throttle(() => {
+      setWindowWidth(window.innerWidth);
+    }, 1000)();
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return windowWidth;
+};
 
 export function randomVividColor(minSat, maxSat, minLightness, maxLightness) {
   const randomHue = Math.floor(360 * Math.random());

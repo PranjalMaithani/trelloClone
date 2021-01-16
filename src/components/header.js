@@ -11,10 +11,15 @@ export const Header = () => {
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
   const { boards } = useContext(TrelloBoardsContext);
   const match = useRouteMatch("/:b");
+  let titleVisible, leftHeaderTabFlex;
+  titleVisible =
+    window.innerWidth > 900 || match.params.b === "boards" ? "visible" : "none";
+  leftHeaderTabFlex =
+    window.innerWidth < 900 && match.params.b === "boards" ? "0%" : "100%";
 
   return (
     <header className="App-header">
-      <div className="headerTab">
+      <div className="headerTab" style={{ flexBasis: leftHeaderTabFlex }}>
         {currentBoard !== null && match && match.params.b !== "boards" && (
           <div className="boardUIbuttons">
             <Link
@@ -35,7 +40,9 @@ export const Header = () => {
           </div>
         )}
       </div>
-      <h1 className="trulloLogo">TRULLO</h1>
+      <h1 className="trulloLogo" style={{ display: titleVisible }}>
+        TRULLO
+      </h1>
       <div
         className="headerTab headerTabRight"
         style={{ justifyContent: "flex-end" }}
