@@ -1,27 +1,4 @@
-import { useEffect, useState } from "react";
-
-const throttle = (callback, limit) => {
-  let lastCallback;
-  let lastRan;
-  return function () {
-    const context = this;
-    const args = arguments;
-    if (!lastRan) {
-      console.log("applying Firsttime");
-      callback.apply(context, args);
-      lastRan = Date.now();
-    } else {
-      clearTimeout(lastCallback);
-      lastCallback = setTimeout(() => {
-        if (Date.now() - lastRan >= limit) {
-          console.log("applying ");
-          callback.apply(context, args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
-    }
-  };
-};
+import { useCallback, useEffect, useState, useRef } from "react";
 
 export const handleKeyDown = (event, confirmAction, cancelAction) => {
   if (event.key === "Escape") cancelAction(event);
@@ -52,21 +29,32 @@ export function useClickOutside(innerRef, callback) {
   }, [callback, innerRef]);
 }
 
-export const useResize = () => {
+export const useResize = (limit) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [lastRan, setLastRan] = useState(0);
+  const postExec = useRef(null);
 
-  function handleResize() {
-    throttle(() => {
+  //to resize once after the user stops resizing
+  const handleResizePost = useCallback(() => {
+    setWindowWidth(window.innerWidth);
+  }, []);
+
+  const handleResize = useCallback(() => {
+    if (Date.now() - lastRan > limit) {
+      setLastRan(Date.now());
       setWindowWidth(window.innerWidth);
-    }, 1000)();
-  }
+      clearTimeout(postExec.current);
+      postExec.current = setTimeout(handleResizePost, limit);
+    }
+  }, [limit, lastRan, handleResizePost]);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
+    handleResize();
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   return windowWidth;
 };
