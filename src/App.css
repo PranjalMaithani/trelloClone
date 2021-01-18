@@ -17,14 +17,12 @@ body {
 
 .App {
   height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-
   background: linear-gradient(
     var(--backgroundColor-darker),
     var(--backgroundColor)
@@ -53,6 +51,8 @@ body {
   bottom: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  pointer-events: none;
 }
 
 @media (max-width: 900px) {
@@ -70,6 +70,7 @@ body {
   justify-content: flex-end;
   align-items: center;
   justify-self: flex-end;
+  pointer-events: all;
 }
 
 .headerTab {
@@ -253,7 +254,7 @@ h3 {
   background-color: var(--base, #ebecf0);
   border-radius: 3px;
   box-sizing: border-box;
-  max-height: calc(100vh - 155px);
+  max-height: calc(100vh - 185px);
   white-space: normal;
 
   margin-bottom: 0;
@@ -267,7 +268,7 @@ h3 {
 
 @media (max-height: 750px) {
   .list {
-    max-height: calc(100vh - 185px);
+    max-height: calc(100vh - 215px);
   }
   .body {
     overflow-y: hidden;
@@ -277,9 +278,9 @@ h3 {
 .listsContainer {
   display: flex;
   flex-direction: row;
-  position: absolute;
   padding: 0 20px;
   margin-bottom: 8px;
+  height: 100%;
 }
 
 .listCards {
@@ -296,7 +297,7 @@ h3 {
 
 .listTitle {
   display: block;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: transparent;
   border-style: none;
   box-shadow: none;
@@ -361,6 +362,7 @@ h3 {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 10px;
   min-width: 240px;
+  max-width: 272px;
 }
 
 .addListButton:hover {
@@ -528,7 +530,7 @@ ul li {
   left: 0;
   right: 0;
   bottom: 0;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .board {
@@ -537,6 +539,9 @@ ul li {
   left: 0;
   right: 0;
   bottom: 0;
+
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .boardsSelectionWrapper h1 {

@@ -86,3 +86,14 @@ export function convertToSlug(Text) {
     .replace(/[^\w ]+/g, "")
     .replace(/ +/g, "-");
 }
+
+export const checkForScrollbar = (element, callbackIfYes, callbackIfNo) => {
+  const scrollWidth = element.scrollWidth;
+  const clientWidth = element.clientWidth;
+
+  if (scrollWidth > clientWidth) {
+    callbackIfYes();
+  } else {
+    callbackIfNo();
+  }
+};

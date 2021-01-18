@@ -1,5 +1,12 @@
 import { Loader } from "./loader/loader";
-import { useEffect, useState, useContext, useCallback, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useRef,
+  forwardRef,
+} from "react";
 import {
   DragMaster,
   DroppableBoard,
@@ -24,7 +31,7 @@ import { convertToSlug } from "../utils/lib";
 
 import { useRouteMatch, useHistory } from "react-router-dom";
 
-export const Board = () => {
+export const Board = forwardRef((props, boardRef) => {
   const { currentBoard, setCurrentBoard } = useContext(CurrentBoardContext);
   const { boards } = useContext(TrelloBoardsContext);
   const { lists } = useContext(TrelloListsContext);
@@ -143,7 +150,7 @@ export const Board = () => {
   }
 
   return (
-    <div className="board">
+    <div className="board" ref={boardRef}>
       <DragMaster>
         <DroppableBoard>
           {(providedBoardDroppable, snapshotBoardDroppable) => (
@@ -192,7 +199,7 @@ export const Board = () => {
       </DragMaster>
     </div>
   );
-};
+});
 
 export const getElementFromKey = (array, id, key) => {
   return array.find((board) => board[key] === id);

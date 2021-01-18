@@ -42,6 +42,7 @@ function App() {
 
   const [currentBoard, setCurrentBoard] = React.useState(null);
   const lastActiveBoard = React.useRef(null);
+  const boardRef = React.useRef(null);
 
   const boardsValue = React.useMemo(() => ({ boards, setBoards }), [boards]);
   const listsValue = React.useMemo(() => ({ lists, setLists }), [lists]);
@@ -150,7 +151,7 @@ function App() {
                 <TrelloListsContext.Provider value={listsValue}>
                   <TrelloCardsContext.Provider value={cardsValue}>
                     <HasDataFetchedContext.Provider value={hasDataFetchedValue}>
-                      <Board />
+                      <Board ref={boardRef} />
                     </HasDataFetchedContext.Provider>
                   </TrelloCardsContext.Provider>
                 </TrelloListsContext.Provider>
@@ -163,6 +164,7 @@ function App() {
           </CurrentBoardContext.Provider>
         </TrelloBoardsContext.Provider>
         <Footer
+          overflowRef={boardRef}
           isLoggedIn={isLoggedIn}
           logOutResetData={() => {
             setIsLoggedIn(false);
