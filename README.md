@@ -8,6 +8,8 @@ This is a clone of [Trello](https://trello.com/), and uses their api to work on 
 
 React has been used to build this.
 
+[![Video Thumbnail](https://i.imgur.com/tQqL9QS.png)](https://www.youtube.com/watch?v=qfdLk4egmYk)
+
 ## Features
 
 * Drag and drop cards from one list to another, in this kanban board. Or even drag the whole list from one place to another!
@@ -21,12 +23,6 @@ React has been used to build this.
 * Users can login with their trello account using auth or just use the demo account.
 
 * React router has been implemented to work with card and boad urls. Enter a card url to directly jump to the card in modal view.
-
-
-## Video
-
-[![Video Thumbnail](https://i.imgur.com/tQqL9QS.png)](https://www.youtube.com/watch?v=qfdLk4egmYk)
-
 
 ## Board
 
