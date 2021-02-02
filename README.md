@@ -23,6 +23,11 @@ React has been used to build this.
 * React router has been implemented to work with card and boad urls. Enter a card url to directly jump to the card in modal view.
 
 
+## Video
+
+[![Video Thumbnail](https://i.imgur.com/tQqL9QS.png)](https://www.youtube.com/watch?v=qfdLk4egmYk)
+
+
 ## Board
 
 ![Board](https://i.imgur.com/E6m05nj.png)
@@ -42,8 +47,3 @@ React has been used to build this.
 ## Login Screen
 
 ![Login](https://i.imgur.com/GQy2Pmo.png)
-
-## Video
-
-[![Video Thumbnail](https://i.imgur.com/tQqL9QS.png)](https://www.youtube.com/watch?v=qfdLk4egmYk)
-
