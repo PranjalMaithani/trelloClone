@@ -20,6 +20,8 @@ React has been used to build this.
 * Trullo is reponsive to screen size. The header and footer change depending on screen width. Lists are scaled according to screen height.
 * Users can login with their trello account using auth or just use the demo account.
 
+* React router has been implemented to work with card and boad urls. Enter a card url to directly jump to the card in modal view.
+
 
 ## Board
 
@@ -32,6 +34,14 @@ React has been used to build this.
 ## Card Modal
 
 ![Card Modal](https://i.imgur.com/giU8ynf.png)
+
+## Board Selection
+
+![board selection](https://i.imgur.com/0Wn6ODB.png)
+
+## Login Screen
+
+![Login](https://i.imgur.com/GQy2Pmo.png)
 
 ## Video
 
